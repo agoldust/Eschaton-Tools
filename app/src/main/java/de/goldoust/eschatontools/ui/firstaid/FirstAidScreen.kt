@@ -1,0 +1,788 @@
+package de.goldoust.eschatontools.ui.firstaid
+
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Bookmark
+import androidx.compose.material.icons.rounded.BookmarkBorder
+import androidx.compose.material.icons.rounded.Build
+import androidx.compose.material.icons.rounded.Clear
+import androidx.compose.material.icons.rounded.Emergency
+import androidx.compose.material.icons.rounded.Healing
+import androidx.compose.material.icons.rounded.Lightbulb
+import androidx.compose.material.icons.rounded.LocalHospital
+import androidx.compose.material.icons.rounded.MedicalServices
+import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.Shield
+import androidx.compose.material.icons.rounded.Warning
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import de.goldoust.eschatontools.domain.ProtocolCategory
+import de.goldoust.eschatontools.domain.SurvivalProtocol
+import de.goldoust.eschatontools.domain.UrgencyLevel
+import de.goldoust.eschatontools.ui.theme.EmergencyRedTertiary
+import de.goldoust.eschatontools.ui.theme.EschatonToolsTheme
+import de.goldoust.eschatontools.ui.theme.HazardYellow
+import de.goldoust.eschatontools.ui.theme.TacticalAmberPrimary
+import de.goldoust.eschatontools.ui.theme.TacticalGreenSecondary
+
+@Composable
+fun FirstAidScreen(
+    modifier: Modifier = Modifier,
+    viewModel: FirstAidViewModel = viewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    var isPhoneSinglePaneDetailOpen by remember { mutableStateOf(false) }
+
+    // Intercept back button on phone when detail pane is open
+    if (isPhoneSinglePaneDetailOpen && uiState.selectedProtocol != null) {
+        BackHandler {
+            isPhoneSinglePaneDetailOpen = false
+        }
+    }
+
+    BoxWithConstraints(modifier = modifier.fillMaxSize()) {
+        val isExpandedDualPane = maxWidth >= 600.dp
+
+        if (isExpandedDualPane) {
+            // Dual Pane Layout for Tablet / Wide Form Factors
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background)
+            ) {
+                // Left Master List Pane (360.dp width)
+                Box(
+                    modifier = Modifier
+                        .width(360.dp)
+                        .fillMaxHeight()
+                        .border(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.surfaceVariant
+                        )
+                ) {
+                    ProtocolListPane(
+                        uiState = uiState,
+                        onSearchQueryChange = { viewModel.onSearchQueryChange(it) },
+                        onCategorySelect = { viewModel.onCategorySelect(it) },
+                        onProtocolSelect = { protocol ->
+                            viewModel.onProtocolSelect(protocol)
+                        },
+                        onQuickEmergencyClick = { protocolId ->
+                            val found = uiState.allProtocols.find { it.id == protocolId }
+                            viewModel.onProtocolSelect(found)
+                        }
+                    )
+                }
+
+                // Right Detail Pane
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                ) {
+                    if (uiState.selectedProtocol != null) {
+                        ProtocolDetailContent(
+                            protocol = uiState.selectedProtocol!!,
+                            onToggleBookmark = { viewModel.toggleBookmark(it) },
+                            showBackButton = false,
+                            onBackClick = {}
+                        )
+                    } else {
+                        EmptyDetailPlaceholder()
+                    }
+                }
+            }
+        } else {
+            // Single Pane Layout for Phone Form Factor
+            if (isPhoneSinglePaneDetailOpen && uiState.selectedProtocol != null) {
+                ProtocolDetailContent(
+                    protocol = uiState.selectedProtocol!!,
+                    onToggleBookmark = { viewModel.toggleBookmark(it) },
+                    showBackButton = true,
+                    onBackClick = { isPhoneSinglePaneDetailOpen = false }
+                )
+            } else {
+                ProtocolListPane(
+                    uiState = uiState,
+                    onSearchQueryChange = { viewModel.onSearchQueryChange(it) },
+                    onCategorySelect = { viewModel.onCategorySelect(it) },
+                    onProtocolSelect = { protocol ->
+                        viewModel.onProtocolSelect(protocol)
+                        isPhoneSinglePaneDetailOpen = true
+                    },
+                    onQuickEmergencyClick = { protocolId ->
+                        val found = uiState.allProtocols.find { it.id == protocolId }
+                        viewModel.onProtocolSelect(found)
+                        isPhoneSinglePaneDetailOpen = true
+                    }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ProtocolListPane(
+    uiState: FirstAidUiState,
+    onSearchQueryChange: (String) -> Unit,
+    onCategorySelect: (ProtocolCategory) -> Unit,
+    onProtocolSelect: (SurvivalProtocol) -> Unit,
+    onQuickEmergencyClick: (String) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp)
+    ) {
+        // Module Header Card
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface
+            ),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Row(
+                modifier = Modifier.padding(14.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.MedicalServices,
+                    contentDescription = null,
+                    tint = TacticalGreenSecondary,
+                    modifier = Modifier.size(30.dp)
+                )
+                Column {
+                    Text(
+                        text = "SURVIVAL & FIRST AID GUIDE",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        text = "100% Offline Medical & Field Manual",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
+
+        // Quick Emergency 1-Tap Action Presets
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Button(
+                onClick = { onQuickEmergencyClick("cpr_protocol") },
+                modifier = Modifier
+                    .weight(1f)
+                    .height(44.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = EmergencyRedTertiary,
+                    contentColor = Color.White
+                ),
+                shape = RoundedCornerShape(10.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.Emergency,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = "CPR PROTOCOL",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 12.sp
+                )
+            }
+
+            Button(
+                onClick = { onQuickEmergencyClick("tourniquet_protocol") },
+                modifier = Modifier
+                    .weight(1f)
+                    .height(44.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = EmergencyRedTertiary,
+                    contentColor = Color.White
+                ),
+                shape = RoundedCornerShape(10.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.Healing,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = "TOURNIQUET",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 12.sp
+                )
+            }
+        }
+
+        // Offline Search TextField
+        OutlinedTextField(
+            value = uiState.searchQuery,
+            onValueChange = onSearchQueryChange,
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = {
+                Text(
+                    text = "Search offline guide (e.g. CPR, Water, Fire)...",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = 13.sp
+                )
+            },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Rounded.Search,
+                    contentDescription = "Search",
+                    tint = TacticalAmberPrimary
+                )
+            },
+            trailingIcon = {
+                if (uiState.searchQuery.isNotEmpty()) {
+                    IconButton(onClick = { onSearchQueryChange("") }) {
+                        Icon(
+                            imageVector = Icons.Rounded.Clear,
+                            contentDescription = "Clear",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            },
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = TacticalAmberPrimary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface
+            ),
+            shape = RoundedCornerShape(10.dp),
+            singleLine = true
+        )
+
+        // Category Filter Chips Bar
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(ProtocolCategory.entries) { category ->
+                val isSelected = uiState.selectedCategory == category
+                FilterChip(
+                    selected = isSelected,
+                    onClick = { onCategorySelect(category) },
+                    label = {
+                        Text(
+                            text = category.displayName,
+                            fontSize = 12.sp,
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                        )
+                    },
+                    colors = FilterChipDefaults.filterChipColors(
+                        selectedContainerColor = TacticalGreenSecondary,
+                        selectedLabelColor = Color.Black,
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        labelColor = MaterialTheme.colorScheme.onSurface
+                    ),
+                    shape = RoundedCornerShape(8.dp)
+                )
+            }
+        }
+
+        // Protocol Items List
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            items(uiState.filteredProtocols) { protocol ->
+                val isSelected = uiState.selectedProtocol?.id == protocol.id
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onProtocolSelect(protocol) }
+                        .then(
+                            if (isSelected) {
+                                Modifier.border(
+                                    1.5.dp,
+                                    TacticalGreenSecondary,
+                                    RoundedCornerShape(12.dp)
+                                )
+                            } else Modifier
+                        ),
+                    colors = CardDefaults.cardColors(
+                        containerColor = if (isSelected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
+                    ),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(14.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = protocol.category.displayName.uppercase(),
+                                style = MaterialTheme.typography.labelSmall,
+                                fontFamily = FontFamily.Monospace,
+                                fontWeight = FontWeight.Bold,
+                                color = TacticalGreenSecondary
+                            )
+
+                            UrgencyBadge(urgency = protocol.urgency)
+                        }
+
+                        Text(
+                            text = protocol.title,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+
+                        Text(
+                            text = protocol.summary,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 2
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun ProtocolDetailContent(
+    protocol: SurvivalProtocol,
+    onToggleBookmark: (String) -> Unit,
+    showBackButton: Boolean,
+    onBackClick: () -> Unit
+) {
+    val scrollState = rememberScrollState()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .verticalScroll(scrollState)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        // Back Button & Header Bar
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (showBackButton) {
+                    IconButton(onClick = onBackClick) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                            contentDescription = "Back to List",
+                            tint = TacticalAmberPrimary
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(4.dp))
+                }
+
+                Text(
+                    text = protocol.category.displayName.uppercase(),
+                    style = MaterialTheme.typography.labelMedium,
+                    fontFamily = FontFamily.Monospace,
+                    fontWeight = FontWeight.Bold,
+                    color = TacticalGreenSecondary
+                )
+            }
+
+            IconButton(onClick = { onToggleBookmark(protocol.id) }) {
+                Icon(
+                    imageVector = if (protocol.isBookmarked) Icons.Rounded.Bookmark else Icons.Rounded.BookmarkBorder,
+                    contentDescription = "Bookmark",
+                    tint = if (protocol.isBookmarked) TacticalAmberPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+
+        // Title & Urgency Level Card
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface
+            ),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    UrgencyBadge(urgency = protocol.urgency)
+                    Text(
+                        text = "100% OFFLINE MANUAL",
+                        style = MaterialTheme.typography.labelSmall,
+                        fontFamily = FontFamily.Monospace,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                Text(
+                    text = protocol.title,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                Text(
+                    text = protocol.summary,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+
+        // Required Tools Section (if any)
+        if (protocol.requiredTools.isNotEmpty()) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                ),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(14.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.Build,
+                            contentDescription = null,
+                            tint = TacticalAmberPrimary,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Text(
+                            text = "REQUIRED TOOLS & MATERIALS",
+                            style = MaterialTheme.typography.labelMedium,
+                            fontFamily = FontFamily.Monospace,
+                            fontWeight = FontWeight.Bold,
+                            color = TacticalAmberPrimary
+                        )
+                    }
+
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        protocol.requiredTools.forEach { tool ->
+                            AssistChip(
+                                onClick = {},
+                                label = { Text(tool, fontSize = 12.sp) },
+                                colors = AssistChipDefaults.assistChipColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                    labelColor = MaterialTheme.colorScheme.onSurface
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        // Critical Warnings Callout Box (if any)
+        if (protocol.warnings.isNotEmpty()) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = EmergencyRedTertiary.copy(alpha = 0.15f)
+                ),
+                border = androidx.compose.foundation.BorderStroke(1.dp, EmergencyRedTertiary),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(14.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.Warning,
+                            contentDescription = null,
+                            tint = EmergencyRedTertiary,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Text(
+                            text = "CRITICAL FIELD WARNINGS",
+                            style = MaterialTheme.typography.labelMedium,
+                            fontFamily = FontFamily.Monospace,
+                            fontWeight = FontWeight.Bold,
+                            color = EmergencyRedTertiary
+                        )
+                    }
+
+                    protocol.warnings.forEach { warning ->
+                        Text(
+                            text = "• $warning",
+                            style = MaterialTheme.typography.bodySmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+            }
+        }
+
+        // Step-by-Step Interactive Guide Section
+        Text(
+            text = "STEP-BY-STEP PROCEDURE",
+            style = MaterialTheme.typography.titleMedium,
+            fontFamily = FontFamily.Monospace,
+            fontWeight = FontWeight.Bold,
+            color = TacticalAmberPrimary
+        )
+
+        protocol.steps.forEach { step ->
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                ),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(28.dp)
+                                .background(TacticalGreenSecondary, CircleShape),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "${step.stepNumber}",
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Black
+                            )
+                        }
+
+                        Text(
+                            text = step.title,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+
+                    Text(
+                        text = step.description,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    step.warning?.let { stepWarn ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(HazardYellow.copy(alpha = 0.15f), RoundedCornerShape(8.dp))
+                                .padding(10.dp)
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Rounded.Warning,
+                                    contentDescription = null,
+                                    tint = HazardYellow,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                                Text(
+                                    text = stepWarn,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = HazardYellow
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Pro Tips Box (if any)
+        if (protocol.proTips.isNotEmpty()) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant
+                ),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(14.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.Lightbulb,
+                            contentDescription = null,
+                            tint = TacticalAmberPrimary,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Text(
+                            text = "FIELD PRO-TIPS",
+                            style = MaterialTheme.typography.labelMedium,
+                            fontFamily = FontFamily.Monospace,
+                            fontWeight = FontWeight.Bold,
+                            color = TacticalAmberPrimary
+                        )
+                    }
+
+                    protocol.proTips.forEach { tip ->
+                        Text(
+                            text = "💡 $tip",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun UrgencyBadge(urgency: UrgencyLevel) {
+    val (bgColor, textColor, label) = when (urgency) {
+        UrgencyLevel.CRITICAL -> Triple(EmergencyRedTertiary, Color.White, "CRITICAL")
+        UrgencyLevel.HIGH -> Triple(HazardYellow, Color.Black, "HIGH PRIORITY")
+        UrgencyLevel.MODERATE -> Triple(TacticalAmberPrimary.copy(alpha = 0.3f), TacticalAmberPrimary, "MODERATE")
+    }
+
+    Surface(
+        color = bgColor,
+        shape = RoundedCornerShape(6.dp)
+    ) {
+        Text(
+            text = label,
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
+            style = MaterialTheme.typography.labelSmall,
+            fontFamily = FontFamily.Monospace,
+            fontWeight = FontWeight.Bold,
+            color = textColor
+        )
+    }
+}
+
+@Composable
+fun EmptyDetailPlaceholder() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Rounded.MedicalServices,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(48.dp)
+            )
+            Text(
+                text = "Select a protocol from the list to view offline instructions.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FirstAidScreenPreview() {
+    EschatonToolsTheme {
+        FirstAidScreen()
+    }
+}
