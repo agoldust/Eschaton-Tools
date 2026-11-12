@@ -38,9 +38,7 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -58,15 +56,14 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import de.goldoust.eschatontools.domain.Waypoint
+import de.goldoust.eschatontools.R
 import de.goldoust.eschatontools.ui.theme.EmergencyRedTertiary
 import de.goldoust.eschatontools.ui.theme.EschatonToolsTheme
 import de.goldoust.eschatontools.ui.theme.HazardYellow
@@ -122,7 +119,7 @@ fun CompassScreen(
                     )
                     Column {
                         Text(
-                            text = "SOLAR COMPASS & NAV",
+                            text = stringResource(R.string.solar_compass_title),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -136,7 +133,7 @@ fun CompassScreen(
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
-                                text = if (uiState.latitude != null) "GPS LOCKED" else "ACQUIRING GPS...",
+                                text = if (uiState.latitude != null) stringResource(R.string.gps_locked) else stringResource(R.string.acquiring_gps),
                                 style = MaterialTheme.typography.labelSmall,
                                 fontFamily = FontFamily.Monospace,
                                 color = if (uiState.latitude != null) TacticalGreenSecondary else HazardYellow
@@ -150,7 +147,7 @@ fun CompassScreen(
                     onClick = { compassViewModel.toggleTrueNorth() },
                     label = {
                         Text(
-                            text = if (uiState.isTrueNorth) "TRUE N" else "MAG N",
+                            text = if (uiState.isTrueNorth) stringResource(R.string.true_north) else stringResource(R.string.mag_north),
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.Bold,
                             fontSize = 12.sp
@@ -220,7 +217,7 @@ fun CompassScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.WbSunny,
-                        contentDescription = "Sun Direction",
+                        contentDescription = stringResource(R.string.sun_direction),
                         tint = HazardYellow,
                         modifier = Modifier
                             .padding(top = 18.dp)
@@ -240,7 +237,7 @@ fun CompassScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.Navigation,
-                        contentDescription = "Waypoint Direction",
+                        contentDescription = stringResource(R.string.waypoint_direction),
                         tint = TacticalGreenSecondary,
                         modifier = Modifier
                             .padding(top = 2.dp)
@@ -322,7 +319,7 @@ fun CompassScreen(
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "PITCH",
+                        text = stringResource(R.string.pitch),
                         style = MaterialTheme.typography.labelSmall,
                         fontFamily = FontFamily.Monospace,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -345,7 +342,7 @@ fun CompassScreen(
 
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "ROLL",
+                        text = stringResource(R.string.roll),
                         style = MaterialTheme.typography.labelSmall,
                         fontFamily = FontFamily.Monospace,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -389,7 +386,7 @@ fun CompassScreen(
                             modifier = Modifier.size(20.dp)
                         )
                         Text(
-                            text = "CURRENT GPS POSITION",
+                            text = stringResource(R.string.current_gps_position),
                             style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.Bold,
                             color = HazardYellow
@@ -397,7 +394,7 @@ fun CompassScreen(
                     }
 
                     Text(
-                        text = "DECL: ${if (uiState.declination >= 0) "+" else ""}${"%.1f".format(uiState.declination)}°",
+                        text = stringResource(R.string.declination, "${if (uiState.declination >= 0) "+" else ""}${"%.1f".format(uiState.declination)}°"),
                         style = MaterialTheme.typography.labelMedium,
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
@@ -411,7 +408,7 @@ fun CompassScreen(
                 val accStr = uiState.accuracy?.let { "±${"%.1f".format(it)}m" } ?: "---"
 
                 Text(
-                    text = "LAT: $latStr   LON: $lonStr",
+                    text = "${stringResource(R.string.lat)}: $latStr   ${stringResource(R.string.lon)}: $lonStr",
                     style = MaterialTheme.typography.bodyMedium,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.SemiBold,
@@ -419,7 +416,7 @@ fun CompassScreen(
                 )
 
                 Text(
-                    text = "ALTITUDE: $altStr  •  ACCURACY: $accStr",
+                    text = "${stringResource(R.string.altitude)}: $altStr  •  ${stringResource(R.string.accuracy)}: $accStr",
                     style = MaterialTheme.typography.bodySmall,
                     fontFamily = FontFamily.Monospace,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -450,7 +447,7 @@ fun CompassScreen(
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        text = "SOLAR CALIBRATION (OFFLINE)",
+                        text = stringResource(R.string.solar_calibration_title),
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
                         color = HazardYellow
@@ -467,7 +464,7 @@ fun CompassScreen(
                     ) {
                         Column {
                             Text(
-                                text = "SUN AZIMUTH",
+                                text = stringResource(R.string.sun_azimuth),
                                 style = MaterialTheme.typography.labelSmall,
                                 fontFamily = FontFamily.Monospace,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -483,7 +480,7 @@ fun CompassScreen(
 
                         Column {
                             Text(
-                                text = "SUN ALTITUDE",
+                                text = stringResource(R.string.sun_altitude),
                                 style = MaterialTheme.typography.labelSmall,
                                 fontFamily = FontFamily.Monospace,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -499,13 +496,13 @@ fun CompassScreen(
 
                         Column {
                             Text(
-                                text = "DAY/NIGHT",
+                                text = stringResource(R.string.day_night),
                                 style = MaterialTheme.typography.labelSmall,
                                 fontFamily = FontFamily.Monospace,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Text(
-                                text = if (uiState.isDaytime) "DAYTIME" else "NIGHT",
+                                text = if (uiState.isDaytime) stringResource(R.string.daytime) else stringResource(R.string.nighttime),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontFamily = FontFamily.Monospace,
                                 fontWeight = FontWeight.Bold,
@@ -516,16 +513,16 @@ fun CompassScreen(
 
                     Text(
                         text = if (uiState.isDaytime) {
-                            "Daytime Calibration: Point device top edge directly toward the Sun. Your heading should align with Sun Azimuth (${sunAzStr})."
+                            stringResource(R.string.daytime_calibration_desc, sunAzStr)
                         } else {
-                            "Nighttime: Solar calibration inactive. Use magnetic sensor or Polaris star alignment."
+                            stringResource(R.string.nighttime_calibration_desc)
                         },
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 } else {
                     Text(
-                        text = "Waiting for GPS coordinates to compute solar position...",
+                        text = stringResource(R.string.waiting_gps_solar),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -551,7 +548,7 @@ fun CompassScreen(
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "NAVIGATING TO",
+                            text = stringResource(R.string.navigating_to),
                             style = MaterialTheme.typography.labelSmall,
                             fontFamily = FontFamily.Monospace,
                             color = TacticalGreenSecondary
@@ -564,9 +561,9 @@ fun CompassScreen(
                         )
                         uiState.distanceToActiveWaypoint?.let { dist ->
                             val distText = if (dist >= 1000) "%.2f km".format(dist / 1000f) else "${dist.toInt()} m"
-                            val bearingText = uiState.bearingToActiveWaypoint?.let { " | Bearing: ${it.toInt()}°" } ?: ""
+                            val bearingText = uiState.bearingToActiveWaypoint?.let { " | ${stringResource(R.string.bearing)}: ${it.toInt()}°" } ?: ""
                             Text(
-                                text = "Distance: $distText$bearingText",
+                                text = "${stringResource(R.string.distance)}: $distText$bearingText",
                                 style = MaterialTheme.typography.bodySmall,
                                 fontFamily = FontFamily.Monospace,
                                 color = TacticalAmberPrimary
@@ -577,7 +574,7 @@ fun CompassScreen(
                     IconButton(onClick = { compassViewModel.selectActiveWaypoint(null) }) {
                         Icon(
                             imageVector = Icons.Rounded.Delete,
-                            contentDescription = "Clear Target Waypoint",
+                            contentDescription = stringResource(R.string.clear_target_waypoint),
                             tint = EmergencyRedTertiary
                         )
                     }
@@ -609,7 +606,7 @@ fun CompassScreen(
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = "SAVE WAYPOINT",
+                    text = stringResource(R.string.save_waypoint),
                     fontWeight = FontWeight.Bold,
                     fontSize = 13.sp
                 )
@@ -630,7 +627,7 @@ fun CompassScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        text = "SAVED OFFLINE WAYPOINTS (${uiState.waypoints.size})",
+                        text = stringResource(R.string.saved_offline_waypoints, uiState.waypoints.size),
                         style = MaterialTheme.typography.labelMedium,
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
@@ -669,7 +666,7 @@ fun CompassScreen(
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 if (isSelected) {
                                     Text(
-                                        text = "ACTIVE",
+                                        text = stringResource(R.string.active),
                                         style = MaterialTheme.typography.labelSmall,
                                         fontFamily = FontFamily.Monospace,
                                         color = TacticalGreenSecondary,
@@ -683,7 +680,7 @@ fun CompassScreen(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Rounded.Delete,
-                                        contentDescription = "Delete Waypoint",
+                                        contentDescription = stringResource(R.string.delete_waypoint),
                                         tint = EmergencyRedTertiary,
                                         modifier = Modifier.size(18.dp)
                                     )
@@ -703,7 +700,7 @@ fun CompassScreen(
             onDismissRequest = { showAddWaypointDialog = false },
             title = {
                 Text(
-                    text = "SAVE OFFLINE WAYPOINT",
+                    text = stringResource(R.string.save_offline_waypoint_dialog),
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
                     color = TacticalAmberPrimary
@@ -712,13 +709,13 @@ fun CompassScreen(
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
-                        text = "Enter a label for your current GPS location:",
+                        text = stringResource(R.string.enter_waypoint_label),
                         style = MaterialTheme.typography.bodyMedium
                     )
                     OutlinedTextField(
                         value = waypointName,
                         onValueChange = { waypointName = it },
-                        placeholder = { Text("e.g. Base Camp, Water Source") },
+                        placeholder = { Text(stringResource(R.string.waypoint_placeholder)) },
                         singleLine = true,
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = TacticalAmberPrimary
@@ -734,12 +731,12 @@ fun CompassScreen(
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = TacticalAmberPrimary)
                 ) {
-                    Text("SAVE", color = Color.Black, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.save), color = Color.Black, fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showAddWaypointDialog = false }) {
-                    Text("CANCEL", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(stringResource(R.string.cancel), color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         )

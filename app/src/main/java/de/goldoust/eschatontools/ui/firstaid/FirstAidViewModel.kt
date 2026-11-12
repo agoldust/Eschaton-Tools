@@ -15,7 +15,8 @@ data class FirstAidUiState(
     val selectedProtocol: SurvivalProtocol? = null,
     val searchQuery: String = "",
     val selectedCategory: ProtocolCategory = ProtocolCategory.ALL,
-    val bookmarkedIds: Set<String> = emptySet()
+    val bookmarkedIds: Set<String> = emptySet(),
+    val isFarsiLoaded: Boolean = false
 )
 
 class FirstAidViewModel : ViewModel() {
@@ -24,13 +25,22 @@ class FirstAidViewModel : ViewModel() {
     val uiState: StateFlow<FirstAidUiState> = _uiState.asStateFlow()
 
     init {
-        val protocols = SurvivalGuideRepository.getProtocols()
-        _uiState.update {
-            it.copy(
-                allProtocols = protocols,
-                filteredProtocols = protocols,
-                selectedProtocol = protocols.firstOrNull()
+        loadProtocols(isFarsi = false)
+    }
+
+    fun loadProtocols(isFarsi: Boolean) {
+        val protocols = SurvivalGuideRepository.getProtocols(isFarsi = isFarsi)
+        _uiState.update { current ->
+            val updatedList = protocols.map { p ->
+                p.copy(isBookmarked = current.bookmarkedIds.contains(p.id))
+            }
+            val selected = updatedList.find { it.id == current.selectedProtocol?.id } ?: updatedList.firstOrNull()
+            val stateWithNewProtocols = current.copy(
+                allProtocols = updatedList,
+                selectedProtocol = selected,
+                isFarsiLoaded = isFarsi
             )
+            stateWithNewProtocols.copy(filteredProtocols = filterProtocols(stateWithNewProtocols))
         }
     }
 

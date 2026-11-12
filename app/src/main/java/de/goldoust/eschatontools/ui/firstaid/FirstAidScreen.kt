@@ -35,10 +35,8 @@ import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Emergency
 import androidx.compose.material.icons.rounded.Healing
 import androidx.compose.material.icons.rounded.Lightbulb
-import androidx.compose.material.icons.rounded.LocalHospital
 import androidx.compose.material.icons.rounded.MedicalServices
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material.icons.rounded.Shield
 import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
@@ -56,6 +54,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -64,12 +63,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import de.goldoust.eschatontools.R
 import de.goldoust.eschatontools.domain.ProtocolCategory
 import de.goldoust.eschatontools.domain.SurvivalProtocol
 import de.goldoust.eschatontools.domain.UrgencyLevel
@@ -80,12 +82,46 @@ import de.goldoust.eschatontools.ui.theme.TacticalAmberPrimary
 import de.goldoust.eschatontools.ui.theme.TacticalGreenSecondary
 
 @Composable
+fun getCategoryLocalizedName(category: ProtocolCategory): String {
+    return when (category) {
+        ProtocolCategory.ALL -> stringResource(R.string.cat_all)
+        ProtocolCategory.FIRST_AID -> stringResource(R.string.cat_first_aid)
+        ProtocolCategory.SURVIVAL -> stringResource(R.string.cat_all)
+        ProtocolCategory.TRAUMA -> stringResource(R.string.cat_trauma)
+        ProtocolCategory.ENVIRONMENTAL -> stringResource(R.string.cat_environmental)
+        ProtocolCategory.HYDRATION -> stringResource(R.string.cat_hydration)
+        ProtocolCategory.SHELTER -> stringResource(R.string.cat_shelter)
+        ProtocolCategory.FIRE -> stringResource(R.string.cat_fire)
+        ProtocolCategory.FORAGING -> stringResource(R.string.cat_foraging)
+        ProtocolCategory.SIGNALLING -> stringResource(R.string.cat_signalling)
+    }
+}
+
+@Composable
+fun getUrgencyLocalizedName(urgency: UrgencyLevel): String {
+    return when (urgency) {
+        UrgencyLevel.CRITICAL -> stringResource(R.string.urgency_critical)
+        UrgencyLevel.HIGH -> stringResource(R.string.urgency_high)
+        UrgencyLevel.MODERATE -> stringResource(R.string.urgency_moderate)
+    }
+}
+
+@Composable
 fun FirstAidScreen(
     modifier: Modifier = Modifier,
     viewModel: FirstAidViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var isPhoneSinglePaneDetailOpen by remember { mutableStateOf(false) }
+
+    val configuration = LocalConfiguration.current
+    val isFarsi = configuration.locales.get(0).language == "fa"
+
+    LaunchedEffect(isFarsi) {
+        if (uiState.isFarsiLoaded != isFarsi) {
+            viewModel.loadProtocols(isFarsi)
+        }
+    }
 
     // Intercept back button on phone when detail pane is open
     if (isPhoneSinglePaneDetailOpen && uiState.selectedProtocol != null) {
@@ -211,13 +247,13 @@ fun ProtocolListPane(
                 )
                 Column {
                     Text(
-                        text = "SURVIVAL & FIRST AID GUIDE",
+                        text = stringResource(R.string.survival_first_aid_title),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                        text = "100% Offline Medical & Field Manual",
+                        text = stringResource(R.string.survival_first_aid_subtitle),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -248,7 +284,7 @@ fun ProtocolListPane(
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "CPR PROTOCOL",
+                    text = stringResource(R.string.quick_cpr),
                     fontWeight = FontWeight.Bold,
                     fontSize = 12.sp
                 )
@@ -272,7 +308,7 @@ fun ProtocolListPane(
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "TOURNIQUET",
+                    text = stringResource(R.string.quick_bleeding),
                     fontWeight = FontWeight.Bold,
                     fontSize = 12.sp
                 )
@@ -286,7 +322,7 @@ fun ProtocolListPane(
             modifier = Modifier.fillMaxWidth(),
             placeholder = {
                 Text(
-                    text = "Search offline guide (e.g. CPR, Water, Fire)...",
+                    text = stringResource(R.string.search_protocols_placeholder),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 13.sp
                 )
@@ -331,7 +367,7 @@ fun ProtocolListPane(
                     onClick = { onCategorySelect(category) },
                     label = {
                         Text(
-                            text = category.displayName,
+                            text = getCategoryLocalizedName(category),
                             fontSize = 12.sp,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                         )
@@ -382,7 +418,7 @@ fun ProtocolListPane(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = protocol.category.displayName.uppercase(),
+                                text = getCategoryLocalizedName(protocol.category).uppercase(),
                                 style = MaterialTheme.typography.labelSmall,
                                 fontFamily = FontFamily.Monospace,
                                 fontWeight = FontWeight.Bold,
@@ -441,7 +477,7 @@ fun ProtocolDetailContent(
                     IconButton(onClick = onBackClick) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                            contentDescription = "Back to List",
+                            contentDescription = stringResource(R.string.back),
                             tint = TacticalAmberPrimary
                         )
                     }
@@ -449,7 +485,7 @@ fun ProtocolDetailContent(
                 }
 
                 Text(
-                    text = protocol.category.displayName.uppercase(),
+                    text = getCategoryLocalizedName(protocol.category).uppercase(),
                     style = MaterialTheme.typography.labelMedium,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
@@ -460,7 +496,7 @@ fun ProtocolDetailContent(
             IconButton(onClick = { onToggleBookmark(protocol.id) }) {
                 Icon(
                     imageVector = if (protocol.isBookmarked) Icons.Rounded.Bookmark else Icons.Rounded.BookmarkBorder,
-                    contentDescription = "Bookmark",
+                    contentDescription = stringResource(R.string.bookmark),
                     tint = if (protocol.isBookmarked) TacticalAmberPrimary else MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
@@ -531,7 +567,7 @@ fun ProtocolDetailContent(
                             modifier = Modifier.size(18.dp)
                         )
                         Text(
-                            text = "REQUIRED TOOLS & MATERIALS",
+                            text = stringResource(R.string.required_tools),
                             style = MaterialTheme.typography.labelMedium,
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.Bold,
@@ -583,7 +619,7 @@ fun ProtocolDetailContent(
                             modifier = Modifier.size(20.dp)
                         )
                         Text(
-                            text = "CRITICAL FIELD WARNINGS",
+                            text = stringResource(R.string.critical_warnings),
                             style = MaterialTheme.typography.labelMedium,
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.Bold,
@@ -605,7 +641,7 @@ fun ProtocolDetailContent(
 
         // Step-by-Step Interactive Guide Section
         Text(
-            text = "STEP-BY-STEP PROCEDURE",
+            text = stringResource(R.string.step_by_step_instructions),
             style = MaterialTheme.typography.titleMedium,
             fontFamily = FontFamily.Monospace,
             fontWeight = FontWeight.Bold,
@@ -710,7 +746,7 @@ fun ProtocolDetailContent(
                             modifier = Modifier.size(18.dp)
                         )
                         Text(
-                            text = "FIELD PRO-TIPS",
+                            text = stringResource(R.string.pro_tips_advice),
                             style = MaterialTheme.typography.labelMedium,
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.Bold,
@@ -733,10 +769,10 @@ fun ProtocolDetailContent(
 
 @Composable
 fun UrgencyBadge(urgency: UrgencyLevel) {
-    val (bgColor, textColor, label) = when (urgency) {
-        UrgencyLevel.CRITICAL -> Triple(EmergencyRedTertiary, Color.White, "CRITICAL")
-        UrgencyLevel.HIGH -> Triple(HazardYellow, Color.Black, "HIGH PRIORITY")
-        UrgencyLevel.MODERATE -> Triple(TacticalAmberPrimary.copy(alpha = 0.3f), TacticalAmberPrimary, "MODERATE")
+    val (bgColor, textColor) = when (urgency) {
+        UrgencyLevel.CRITICAL -> Pair(EmergencyRedTertiary, Color.White)
+        UrgencyLevel.HIGH -> Pair(HazardYellow, Color.Black)
+        UrgencyLevel.MODERATE -> Pair(TacticalAmberPrimary.copy(alpha = 0.3f), TacticalAmberPrimary)
     }
 
     Surface(
@@ -744,7 +780,7 @@ fun UrgencyBadge(urgency: UrgencyLevel) {
         shape = RoundedCornerShape(6.dp)
     ) {
         Text(
-            text = label,
+            text = getUrgencyLocalizedName(urgency).uppercase(),
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
             style = MaterialTheme.typography.labelSmall,
             fontFamily = FontFamily.Monospace,
@@ -771,7 +807,7 @@ fun EmptyDetailPlaceholder() {
                 modifier = Modifier.size(48.dp)
             )
             Text(
-                text = "Select a protocol from the list to view offline instructions.",
+                text = stringResource(R.string.select_protocol_desc),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

@@ -57,6 +57,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -65,6 +66,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
+import de.goldoust.eschatontools.R
 import de.goldoust.eschatontools.domain.beacon.SirenMode
 import de.goldoust.eschatontools.domain.beacon.TorchMode
 import de.goldoust.eschatontools.ui.theme.EmergencyRedTertiary
@@ -122,13 +124,13 @@ fun BeaconScreen(
                     )
                     Column {
                         Text(
-                            text = "EMERGENCY BEACON & SOS",
+                            text = stringResource(R.string.emergency_beacon_title),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
-                            text = "Hardware Strobe, Siren & Optical Transmitter",
+                            text = stringResource(R.string.emergency_beacon_subtitle),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -142,7 +144,7 @@ fun BeaconScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.PowerSettingsNew,
-                            contentDescription = "Stop All",
+                            contentDescription = stringResource(R.string.stop_all),
                             tint = Color.Black
                         )
                     }
@@ -170,7 +172,7 @@ fun BeaconScreen(
                         tint = EmergencyRedTertiary
                     )
                     Text(
-                        text = "CRITICAL BATTERY (${state.currentBatteryPercent}%). Auto-shutoff enabled to preserve reserve power.",
+                        text = stringResource(R.string.critical_battery_warning, state.currentBatteryPercent),
                         style = MaterialTheme.typography.bodySmall,
                         color = EmergencyRedTertiary,
                         fontWeight = FontWeight.Bold
@@ -203,13 +205,13 @@ fun BeaconScreen(
                 )
                 Column {
                     Text(
-                        text = if (isSosActive) "SOS MORSE ACTIVE (... --- ...)" else "ACTIVATE MORSE SOS",
+                        text = if (isSosActive) stringResource(R.string.sos_morse_active) else stringResource(R.string.activate_morse_sos),
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         fontFamily = FontFamily.Monospace
                     )
                     Text(
-                        text = if (isSosActive) "Pulsing Camera Torch Flash" else "Optical Emergency Flash Pattern",
+                        text = if (isSosActive) stringResource(R.string.pulsing_camera_flash) else stringResource(R.string.optical_flash_pattern),
                         fontSize = 12.sp,
                         color = Color.Black.copy(alpha = 0.8f)
                     )
@@ -230,7 +232,7 @@ fun BeaconScreen(
                 verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
                 Text(
-                    text = "FLASHLIGHT & STROBE CONTROLLER",
+                    text = stringResource(R.string.flashlight_strobe_controller),
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Bold,
                     color = TacticalAmberPrimary
@@ -253,12 +255,12 @@ fun BeaconScreen(
                         )
                         Column {
                             Text(
-                                text = "Torch Light (Constant ON)",
+                                text = stringResource(R.string.torch_light),
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
-                                text = if (state.hasCameraFlash) "High efficiency LED flashlight" else "No hardware flash unit detected",
+                                text = stringResource(R.string.constant_led_flashlight),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -291,12 +293,12 @@ fun BeaconScreen(
                         )
                         Column {
                             Text(
-                                text = "High-Frequency Strobe (${state.strobeFrequencyHz} Hz)",
+                                text = stringResource(R.string.strobe_flasher),
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
-                                text = "Rapid disorienting / signaling burst",
+                                text = stringResource(R.string.high_freq_strobe),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -315,7 +317,7 @@ fun BeaconScreen(
                 if (state.torchMode == TorchMode.HIGH_FREQ_STROBE) {
                     Column {
                         Text(
-                            text = "Strobe Frequency: ${state.strobeFrequencyHz} Hz",
+                            text = stringResource(R.string.strobe_frequency, state.strobeFrequencyHz),
                             style = MaterialTheme.typography.labelSmall,
                             fontFamily = FontFamily.Monospace,
                             color = TacticalAmberPrimary
@@ -338,7 +340,7 @@ fun BeaconScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        text = "CUSTOM MORSE CODE TRANSMITTER",
+                        text = stringResource(R.string.custom_morse_transmitter),
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -348,8 +350,8 @@ fun BeaconScreen(
                         value = state.morseText,
                         onValueChange = { viewModel.setMorseText(it) },
                         modifier = Modifier.fillMaxWidth(),
-                        label = { Text("Transmission Message") },
-                        placeholder = { Text("e.g., RESCUE / SOS") },
+                        label = { Text(stringResource(R.string.text_to_transmit)) },
+                        placeholder = { Text("e.g. HELP ME / SOS") },
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = TacticalAmberPrimary,
                             unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant
@@ -386,7 +388,7 @@ fun BeaconScreen(
                             shape = RoundedCornerShape(8.dp)
                         ) {
                             Text(
-                                text = if (state.torchMode == TorchMode.CUSTOM_MORSE) "TRANSMITTING..." else "TRANSMIT MORSE",
+                                text = if (state.torchMode == TorchMode.CUSTOM_MORSE) stringResource(R.string.morse_transmitting) else stringResource(R.string.transmit_morse_loop),
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 12.sp
                             )
@@ -419,7 +421,7 @@ fun BeaconScreen(
                         modifier = Modifier.size(24.dp)
                     )
                     Text(
-                        text = "HIGH-DECIBEL AUDIO SIREN SYNTHESIZER",
+                        text = stringResource(R.string.audio_siren_generator),
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
                         color = EmergencyRedTertiary
@@ -427,7 +429,7 @@ fun BeaconScreen(
                 }
 
                 Text(
-                    text = "Generates high intensity distress acoustic sweeps via PCM buffer synthesizer.",
+                    text = stringResource(R.string.high_decibel_siren),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -440,7 +442,7 @@ fun BeaconScreen(
                     FilterChip(
                         selected = state.sirenMode == SirenMode.WAIL,
                         onClick = { viewModel.setSirenMode(SirenMode.WAIL) },
-                        label = { Text("WAIL SIREN", fontSize = 11.sp, fontWeight = FontWeight.Bold) },
+                        label = { Text("WAIL", fontSize = 11.sp, fontWeight = FontWeight.Bold) },
                         leadingIcon = { Icon(Icons.Rounded.GraphicEq, contentDescription = null, modifier = Modifier.size(16.dp)) },
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = EmergencyRedTertiary,
@@ -450,7 +452,7 @@ fun BeaconScreen(
                     FilterChip(
                         selected = state.sirenMode == SirenMode.HI_LO,
                         onClick = { viewModel.setSirenMode(SirenMode.HI_LO) },
-                        label = { Text("HI-LO POLICE", fontSize = 11.sp, fontWeight = FontWeight.Bold) },
+                        label = { Text("HI-LO", fontSize = 11.sp, fontWeight = FontWeight.Bold) },
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = EmergencyRedTertiary,
                             selectedLabelColor = Color.Black
@@ -464,7 +466,7 @@ fun BeaconScreen(
                     FilterChip(
                         selected = state.sirenMode == SirenMode.AUDIO_MORSE_SOS,
                         onClick = { viewModel.setSirenMode(SirenMode.AUDIO_MORSE_SOS) },
-                        label = { Text("AUDIO MORSE SOS", fontSize = 11.sp, fontWeight = FontWeight.Bold) },
+                        label = { Text("AUDIO MORSE", fontSize = 11.sp, fontWeight = FontWeight.Bold) },
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = EmergencyRedTertiary,
                             selectedLabelColor = Color.Black
@@ -473,7 +475,7 @@ fun BeaconScreen(
                     FilterChip(
                         selected = state.sirenMode == SirenMode.EMERGENCY_HORN,
                         onClick = { viewModel.setSirenMode(SirenMode.EMERGENCY_HORN) },
-                        label = { Text("HORN BLAST", fontSize = 11.sp, fontWeight = FontWeight.Bold) },
+                        label = { Text("HORN", fontSize = 11.sp, fontWeight = FontWeight.Bold) },
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = EmergencyRedTertiary,
                             selectedLabelColor = Color.Black
@@ -484,7 +486,7 @@ fun BeaconScreen(
                 // Siren Volume Slider
                 Column {
                     Text(
-                        text = "Siren Output Volume: ${(state.sirenVolume * 100).toInt()}%",
+                        text = stringResource(R.string.siren_volume, (state.sirenVolume * 100).toInt()),
                         style = MaterialTheme.typography.labelSmall,
                         fontFamily = FontFamily.Monospace,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -530,12 +532,12 @@ fun BeaconScreen(
                         )
                         Column {
                             Text(
-                                text = "Screen Strobe Beacon",
+                                text = stringResource(R.string.screen_sos_beacon),
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
-                                text = "Full-screen high contrast visual signaling",
+                                text = stringResource(R.string.full_screen_flasher),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -751,11 +753,11 @@ fun ScreenBeaconOverlay(
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.Close,
-                        contentDescription = "Dismiss",
+                        contentDescription = stringResource(R.string.back),
                         tint = Color.White
                     )
                     Text(
-                        text = "TAP SCREEN TO EXIT BEACON",
+                        text = stringResource(R.string.tap_to_dismiss),
                         style = MaterialTheme.typography.titleMedium,
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,

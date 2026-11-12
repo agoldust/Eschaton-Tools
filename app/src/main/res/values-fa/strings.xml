@@ -1,0 +1,164 @@
+<resources>
+    <!-- App & Navigation -->
+    <string name="app_name">ابزارهای اشاتون</string>
+    <string name="app_subtitle">[آفلاین]</string>
+    <string name="nav_compass">قطب‌نما</string>
+    <string name="nav_beacon">سیگنال SOS</string>
+    <string name="nav_first_aid">کمک‌های اولیه</string>
+    <string name="nav_p2p">شبکه مش</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_title">فرماندهی تاکتیکی</string>
+    <string name="dashboard_subtitle">ماژول بقا را انتخاب کنید</string>
+    <string name="compass_desc">قطب‌نمای خورشیدی ۳ بعدی، نقاط GPS، تراز شیب‌سنج</string>
+    <string name="beacon_desc">چراغ چشمک‌زن سخت‌افزاری، آژیر صوتی، ارسال کد مورس</string>
+    <string name="first_aid_desc">راهنمای میدانی ۱۰۰٪ آفلاین، احیا و پروتکل‌های اضطراری</string>
+    <string name="p2p_desc">شبکه مش آفلاین، چت مستقیم و پخش پیام SOS</string>
+
+    <!-- Language Toggle -->
+    <string name="lang_toggle_en">EN</string>
+    <string name="lang_toggle_fa">فا</string>
+
+    <!-- Permissions Banner -->
+    <string name="permissions_required_title">مجوزهای سخت‌افزاری مورد نیاز است</string>
+    <string name="permissions_required_desc">برنامه برای کارکرد آفلاین به دسترسی دوربین (چراغ چشمک‌زن)، موقعیت‌مکانی (قطب‌نما) و بلوتوث/شبکه نزدیک نیاز دارد.</string>
+    <string name="grant_permissions">اعطای مجوزها</string>
+    <string name="permission_alert">هشدار مجوز</string>
+
+    <!-- Compass Screen -->
+    <string name="solar_compass_title">قطب‌نمای خورشیدی و مسیریابی</string>
+    <string name="gps_locked">جی‌پی‌اس متصل شد</string>
+    <string name="acquiring_gps">در حال دریافت جی‌پی‌اس...</string>
+    <string name="true_north">شمال حقیقی</string>
+    <string name="mag_north">شمال مغناطیسی</string>
+    <string name="sun_direction">جهت خورشید</string>
+    <string name="waypoint_direction">جهت نقطه مسیریابی</string>
+    <string name="pitch">شیب طولی</string>
+    <string name="roll">شیب عرضی</string>
+    <string name="current_gps_position">موقعیت فعلی GPS</string>
+    <string name="declination">انحراف: %1$s</string>
+    <string name="lat">طول</string>
+    <string name="lon">عرض</string>
+    <string name="altitude">ارتفاع</string>
+    <string name="accuracy">دقت</string>
+    <string name="distance">فاصله</string>
+    <string name="bearing">زاویه جهت</string>
+    <string name="solar_calibration_title">کالیبراسیون خورشیدی (آفلاین)</string>
+    <string name="sun_azimuth">سمت خورشید</string>
+    <string name="sun_altitude">ارتفاع خورشید</string>
+    <string name="day_night">روز/شب</string>
+    <string name="daytime">روز</string>
+    <string name="nighttime">شب</string>
+    <string name="daytime_calibration_desc">کالیبراسیون روزانه: لبه بالای دستگاه را مستقیماً به سمت خورشید بگیرید. جهت شما باید با سمت خورشید (%1$s) همراستا شود.</string>
+    <string name="nighttime_calibration_desc">شبانه: کالیبراسیون خورشیدی غیرفعال است. از سنسور مغناطیسی یا ستاره قطبی استفاده کنید.</string>
+    <string name="waiting_gps_solar">در حال انتظار برای مختصات GPS جهت محاسبه موقعیت خورشید...</string>
+    <string name="navigating_to">مسیریابی به سمت</string>
+    <string name="clear_target_waypoint">لغو نقطه هدف</string>
+    <string name="save_waypoint">ذخیره نقطه</string>
+    <string name="saved_offline_waypoints">نقاط آفلاین ذخیره شده (%1$d)</string>
+    <string name="active">فعال</string>
+    <string name="delete_waypoint">حذف نقطه</string>
+    <string name="save_offline_waypoint_dialog">ذخیره نقطه آفلاین</string>
+    <string name="enter_waypoint_label">یک نام برای موقعیت فعلی GPS خود وارد کنید:</string>
+    <string name="waypoint_placeholder">مثلاً: کمپ اصلی، چشمه آب</string>
+    <string name="save">ذخیره</string>
+    <string name="cancel">انصراف</string>
+
+    <!-- Beacon Screen -->
+    <string name="emergency_beacon_title">فرستنده اضطراری و SOS</string>
+    <string name="emergency_beacon_subtitle">چشمک‌زن سخت‌افزاری، آژیر و فرستنده نوری</string>
+    <string name="stop_all">توقف همه</string>
+    <string name="critical_battery_warning">باتری بحرانی (%1$d٪). خاموشی خودکار جهت حفظ ذخیره انرژی فعال شد.</string>
+    <string name="activate_morse_sos">فعال‌سازی SOS با مورس</string>
+    <string name="sos_morse_active">SOS مورس فعال است (... --- ...)</string>
+    <string name="optical_flash_pattern">الگوی فلاش اضطراری نوری</string>
+    <string name="pulsing_camera_flash">فلاش چشمک‌زن دوربین</string>
+    <string name="flashlight_strobe_controller">کنترل‌کننده چراغ‌قوه و استروب</string>
+    <string name="torch_light">چراغ‌قوه</string>
+    <string name="constant_led_flashlight">چراغ‌قوه ثابت LED</string>
+    <string name="strobe_flasher">چراغ چشمک‌زن (استروب)</string>
+    <string name="high_freq_strobe">استروب تاکتیکی با فرکانس بالا</string>
+    <string name="strobe_frequency">فرکانس چشمک‌زن (%1$d هرتز)</string>
+    <string name="audio_siren_generator">مولد آژیر صوتی</string>
+    <string name="high_decibel_siren">آژیر صوتی اضطراری با صدای بلند</string>
+    <string name="siren_active">آژیر صوتی فعال است</string>
+    <string name="siren_volume">ولوم آژیر (%1$d٪)</string>
+    <string name="siren_pattern">الگوی آژیر</string>
+    <string name="siren_continuous">مداوم</string>
+    <string name="siren_pulsed">پالس‌دار</string>
+    <string name="siren_sweep">متغیر (Sweeping)</string>
+    <string name="screen_sos_beacon">چشمک‌زن SOS صفحه نمایش</string>
+    <string name="full_screen_flasher">چراغ چشمک‌زن رنگی تمام صفحه</string>
+    <string name="screen_beacon_active">چشمک‌زن صفحه فعال است</string>
+    <string name="custom_morse_transmitter">فرستنده کد مورس سفارشی</string>
+    <string name="optical_audio_morse_loop">چرخه مورس نوری و صوتی</string>
+    <string name="morse_transmitting">در حال ارسال کد مورس...</string>
+    <string name="text_to_transmit">متن برای ارسال (مثلاً SOS)</string>
+    <string name="transmit_morse_loop">ارسال چرخه مورس</string>
+    <string name="stop_transmission">توقف ارسال</string>
+    <string name="tap_to_dismiss">برای بستن هر نقطه از صفحه را لمس کنید</string>
+
+    <!-- First Aid Screen -->
+    <string name="survival_first_aid_title">راهنمای بقا و کمک‌های اولیه</string>
+    <string name="survival_first_aid_subtitle">دستورالعمل‌های پزشکی و میدانی ۱۰۰٪ آفلاین</string>
+    <string name="search_protocols_placeholder">جستجوی دستورالعمل‌ها (مانند احیا، آتش، مار)...</string>
+    <string name="cat_all">همه</string>
+    <string name="cat_first_aid">کمک‌های اولیه</string>
+    <string name="cat_trauma">تروما و جراحات</string>
+    <string name="cat_environmental">محیطی و اقلیمی</string>
+    <string name="cat_hydration">تامین آب</string>
+    <string name="cat_shelter">پناهگاه</string>
+    <string name="cat_fire">آتش</string>
+    <string name="cat_foraging">خوراکی‌های طبیعت</string>
+    <string name="cat_signalling">سیگنال‌دهی</string>
+    <string name="urgency_critical">حیاتی</string>
+    <string name="urgency_high">بالا</string>
+    <string name="urgency_moderate">متوسط</string>
+    <string name="urgency_low">کم</string>
+    <string name="quick_cpr">احیای قلبی</string>
+    <string name="quick_bleeding">خونریزی</string>
+    <string name="quick_water">تصفیه آب</string>
+    <string name="quick_hypothermia">سرمازدگی</string>
+    <string name="bookmarked_protocols">دستورالعمل‌های نشان‌شده (%1$d)</string>
+    <string name="protocols_count">دستورالعمل‌ها (%1$d)</string>
+    <string name="no_protocols_found">هیچ دستورالعملی با جستجو یا فیلتر شما مطابقت ندارد.</string>
+    <string name="select_protocol_title">انتخاب دستورالعمل بقا</string>
+    <string name="select_protocol_desc">یک دستورالعمل را از لیست انتخاب کنید تا مراحل آفلاین آن را مشاهده نمایید.</string>
+    <string name="required_tools">ابزارهای مورد نیاز</string>
+    <string name="critical_warnings">هشدارهای حیاتی</string>
+    <string name="step_by_step_instructions">دستورالعمل‌های گام‌به‌گام</string>
+    <string name="pro_tips_advice">نکات کلیدی و کاربردی</string>
+    <string name="step_prefix">گام %1$d</string>
+    <string name="bookmark">نشان کردن</string>
+    <string name="back">بازگشت</string>
+
+    <!-- P2P Mesh Screen -->
+    <string name="p2p_mesh_title">شبکه مش و چت مستقیم</string>
+    <string name="p2p_mesh_subtitle">ارتباط Wi-Fi Direct و بلوتوث بدون نیاز به اینترنت</string>
+    <string name="clear_history">پاکسازی تاریخچه</string>
+    <string name="one_tap_sos_broadcast">پخش پیام اضطراری S.O.S. با ۱ لمس</string>
+    <string name="broadcast_gps_sub">ارسال موقعیت مکانی (%1$s, %2$s) و وضعیت اضطراری به همه همتاها</string>
+    <string name="mesh_active">شبکه فعال است (%1$d همتا متصل)</string>
+    <string name="scanning">در حال اسکن...</string>
+    <string name="scan_peers">اسکن همتاها</string>
+    <string name="my_node_id">شناسه گره من: %1$s</string>
+    <string name="no_peers_found">هنوز هیچ همتایی در این نزدیکی یافت نشده است.</string>
+    <string name="scanning_nearby_desc">در حال اسکن دستگاه‌های نزدیک با Wi-Fi Direct و بلوتوث...</string>
+    <string name="encrypted_mesh_chat">چت رمزشده شبکه مش</string>
+    <string name="broadcast">پخش همگانی</string>
+    <string name="type_encrypted_message">تایپ پیام رمزشده...</string>
+    <string name="send">ارسال</string>
+    <string name="sos_broadcast_dialog_title">پخش پیام اضطراری S.O.S.</string>
+    <string name="distress_level">سطح خطر</string>
+    <string name="additional_distress_note">یادداشت اضطراری تکمیلی (اختیاری)</string>
+    <string name="distress_note_placeholder">مثلاً: آسیب دیدگی پا، ۲ بازمانده، کمبود آب...</string>
+    <string name="confirm_sos_broadcast">پخش فوری پیام SOS</string>
+    <string name="distress_level_critical">حیاتی (تهدیدکننده زندگی)</string>
+    <string name="distress_level_severe">شدید (اورژانس پزشکی)</string>
+    <string name="distress_level_moderate">متوسط (نیاز به تجهیزات/کمک)</string>
+    <string name="distress_level_low">کم (اطلاع‌رسانی وضعیت)</string>
+    <string name="mode_auto">مش خودکار</string>
+    <string name="mode_ble">فقط بلوتوث</string>
+    <string name="mode_wifi">وای‌فای دایرکت</string>
+    <string name="distress_beacon">هشدار خطر</string>
+</resources>
