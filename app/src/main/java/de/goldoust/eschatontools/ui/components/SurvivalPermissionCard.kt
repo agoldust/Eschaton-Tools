@@ -23,12 +23,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.MultiplePermissionsState
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import de.goldoust.eschatontools.R
 
 fun getRequiredEschatonPermissions(): List<String> {
     val permissions = mutableListOf(
@@ -75,11 +77,11 @@ fun SurvivalPermissionBanner(
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.Warning,
-                        contentDescription = "Permission Alert",
+                        contentDescription = stringResource(R.string.permission_alert),
                         tint = MaterialTheme.colorScheme.tertiary
                     )
                     Text(
-                        text = "HARDWARE PERMISSIONS REQUIRED",
+                        text = stringResource(R.string.permissions_required_title),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.tertiary
@@ -87,7 +89,7 @@ fun SurvivalPermissionBanner(
                 }
 
                 Text(
-                    text = "Eschaton Tools requires Camera (strobe), Location (compass/waypoints), and Nearby/Bluetooth access (mesh signal) to operate offline.",
+                    text = stringResource(R.string.permissions_required_desc),
                     style = MaterialTheme.typography.bodyMedium,
                     fontSize = 13.sp
                 )
@@ -108,7 +110,7 @@ fun SurvivalPermissionBanner(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "GRANT PERMISSIONS",
+                        text = stringResource(R.string.grant_permissions),
                         fontWeight = FontWeight.Bold
                     )
                 }

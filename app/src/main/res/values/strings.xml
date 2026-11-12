@@ -1,3 +1,164 @@
 <resources>
+    <!-- App & Navigation -->
     <string name="app_name">Eschaton Tools</string>
+    <string name="app_subtitle">[OFF-GRID]</string>
+    <string name="nav_compass">Compass</string>
+    <string name="nav_beacon">Beacon SOS</string>
+    <string name="nav_first_aid">First Aid</string>
+    <string name="nav_p2p">P2P Mesh</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_title">TACTICAL COMMAND</string>
+    <string name="dashboard_subtitle">SELECT SURVIVAL MODULE</string>
+    <string name="compass_desc">3D Solar Compass, GPS Waypoints, Pitch &amp; Roll Level</string>
+    <string name="beacon_desc">Hardware Strobe Light, Audio Siren, Morse Code Loop</string>
+    <string name="first_aid_desc">100%% Offline Field Manual, CPR &amp; Emergency Protocols</string>
+    <string name="p2p_desc">Infrastructure-Free Direct Mesh Chat &amp; 1-Tap SOS Broadcast</string>
+
+    <!-- Language Toggle -->
+    <string name="lang_toggle_en">EN</string>
+    <string name="lang_toggle_fa">FA</string>
+
+    <!-- Permissions Banner -->
+    <string name="permissions_required_title">HARDWARE PERMISSIONS REQUIRED</string>
+    <string name="permissions_required_desc">Eschaton Tools requires Camera (strobe), Location (compass/waypoints), and Nearby/Bluetooth access (mesh signal) to operate offline.</string>
+    <string name="grant_permissions">GRANT PERMISSIONS</string>
+    <string name="permission_alert">Permission Alert</string>
+
+    <!-- Compass Screen -->
+    <string name="solar_compass_title">SOLAR COMPASS &amp; NAV</string>
+    <string name="gps_locked">GPS LOCKED</string>
+    <string name="acquiring_gps">ACQUIRING GPS...</string>
+    <string name="true_north">TRUE N</string>
+    <string name="mag_north">MAG N</string>
+    <string name="sun_direction">Sun Direction</string>
+    <string name="waypoint_direction">Waypoint Direction</string>
+    <string name="pitch">PITCH</string>
+    <string name="roll">ROLL</string>
+    <string name="current_gps_position">CURRENT GPS POSITION</string>
+    <string name="declination">DECL: %1$s</string>
+    <string name="lat">LAT</string>
+    <string name="lon">LON</string>
+    <string name="altitude">ALTITUDE</string>
+    <string name="accuracy">ACCURACY</string>
+    <string name="distance">Distance</string>
+    <string name="bearing">Bearing</string>
+    <string name="solar_calibration_title">SOLAR CALIBRATION (OFFLINE)</string>
+    <string name="sun_azimuth">SUN AZIMUTH</string>
+    <string name="sun_altitude">SUN ALTITUDE</string>
+    <string name="day_night">DAY/NIGHT</string>
+    <string name="daytime">DAYTIME</string>
+    <string name="nighttime">NIGHT</string>
+    <string name="daytime_calibration_desc">Daytime Calibration: Point device top edge directly toward the Sun. Your heading should align with Sun Azimuth (%1$s).</string>
+    <string name="nighttime_calibration_desc">Nighttime: Solar calibration inactive. Use magnetic sensor or Polaris star alignment.</string>
+    <string name="waiting_gps_solar">Waiting for GPS coordinates to compute solar position...</string>
+    <string name="navigating_to">NAVIGATING TO</string>
+    <string name="clear_target_waypoint">Clear Target Waypoint</string>
+    <string name="save_waypoint">SAVE WAYPOINT</string>
+    <string name="saved_offline_waypoints">SAVED OFFLINE WAYPOINTS (%1$d)</string>
+    <string name="active">ACTIVE</string>
+    <string name="delete_waypoint">Delete Waypoint</string>
+    <string name="save_offline_waypoint_dialog">SAVE OFFLINE WAYPOINT</string>
+    <string name="enter_waypoint_label">Enter a label for your current GPS location:</string>
+    <string name="waypoint_placeholder">e.g. Base Camp, Water Source</string>
+    <string name="save">SAVE</string>
+    <string name="cancel">CANCEL</string>
+
+    <!-- Beacon Screen -->
+    <string name="emergency_beacon_title">EMERGENCY BEACON &amp; SOS</string>
+    <string name="emergency_beacon_subtitle">Hardware Strobe, Siren &amp; Optical Transmitter</string>
+    <string name="stop_all">Stop All</string>
+    <string name="critical_battery_warning">CRITICAL BATTERY (%1$d%%). Auto-shutoff enabled to preserve reserve power.</string>
+    <string name="activate_morse_sos">ACTIVATE MORSE SOS</string>
+    <string name="sos_morse_active">SOS MORSE ACTIVE (... --- ...)</string>
+    <string name="optical_flash_pattern">Optical Emergency Flash Pattern</string>
+    <string name="pulsing_camera_flash">Pulsing Camera Torch Flash</string>
+    <string name="flashlight_strobe_controller">FLASHLIGHT &amp; STROBE CONTROLLER</string>
+    <string name="torch_light">TORCH LIGHT</string>
+    <string name="constant_led_flashlight">Constant LED Flashlight</string>
+    <string name="strobe_flasher">STROBE FLASHER</string>
+    <string name="high_freq_strobe">High-frequency tactical strobe</string>
+    <string name="strobe_frequency">STROBE FREQUENCY (%1$d Hz)</string>
+    <string name="audio_siren_generator">AUDIO SIREN GENERATOR</string>
+    <string name="high_decibel_siren">High-decibel audio distress beacon</string>
+    <string name="siren_active">AUDIO SIREN ACTIVE</string>
+    <string name="siren_volume">SIREN VOLUME (%1$d%%)</string>
+    <string name="siren_pattern">SIREN PATTERN</string>
+    <string name="siren_continuous">CONTINUOUS</string>
+    <string name="siren_pulsed">PULSED</string>
+    <string name="siren_sweep">SWEEP</string>
+    <string name="screen_sos_beacon">SCREEN SOS BEACON</string>
+    <string name="full_screen_flasher">Full-screen color strobe flasher</string>
+    <string name="screen_beacon_active">SCREEN BEACON ACTIVE</string>
+    <string name="custom_morse_transmitter">CUSTOM MORSE TRANSMITTER</string>
+    <string name="optical_audio_morse_loop">Optical &amp; Audio Morse code loop</string>
+    <string name="morse_transmitting">MORSE TRANSMITTING...</string>
+    <string name="text_to_transmit">Text to transmit (e.g. HELP ME)</string>
+    <string name="transmit_morse_loop">TRANSMIT MORSE LOOP</string>
+    <string name="stop_transmission">STOP TRANSMISSION</string>
+    <string name="tap_to_dismiss">TAP ANYWHERE TO DISMISS SCREEN BEACON</string>
+
+    <!-- First Aid Screen -->
+    <string name="survival_first_aid_title">SURVIVAL &amp; FIRST AID GUIDE</string>
+    <string name="survival_first_aid_subtitle">100% Offline Medical &amp; Field Manual</string>
+    <string name="search_protocols_placeholder">Search protocols (e.g. CPR, Fire, Snake)...</string>
+    <string name="cat_all">ALL</string>
+    <string name="cat_first_aid">FIRST AID</string>
+    <string name="cat_trauma">TRAUMA</string>
+    <string name="cat_environmental">ENVIRONMENTAL</string>
+    <string name="cat_hydration">HYDRATION</string>
+    <string name="cat_shelter">SHELTER</string>
+    <string name="cat_fire">FIRE</string>
+    <string name="cat_foraging">FORAGING</string>
+    <string name="cat_signalling">SIGNALING</string>
+    <string name="urgency_critical">CRITICAL</string>
+    <string name="urgency_high">HIGH</string>
+    <string name="urgency_moderate">MODERATE</string>
+    <string name="urgency_low">LOW</string>
+    <string name="quick_cpr">CPR</string>
+    <string name="quick_bleeding">BLEEDING</string>
+    <string name="quick_water">WATER PURIFY</string>
+    <string name="quick_hypothermia">HYPOTHERMIA</string>
+    <string name="bookmarked_protocols">BOOKMARKED PROTOCOLS (%1$d)</string>
+    <string name="protocols_count">PROTOCOLS (%1$d)</string>
+    <string name="no_protocols_found">No protocols match your search or filter.</string>
+    <string name="select_protocol_title">SELECT A SURVIVAL PROTOCOL</string>
+    <string name="select_protocol_desc">Choose a protocol from the list to view step-by-step offline instructions.</string>
+    <string name="required_tools">REQUIRED TOOLS</string>
+    <string name="critical_warnings">CRITICAL WARNINGS</string>
+    <string name="step_by_step_instructions">STEP-BY-STEP INSTRUCTIONS</string>
+    <string name="pro_tips_advice">PRO TIPS &amp; FIELD ADVICE</string>
+    <string name="step_prefix">STEP %1$d</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="back">Back</string>
+
+    <!-- P2P Mesh Screen -->
+    <string name="p2p_mesh_title">P2P MESH &amp; DIRECT CHAT</string>
+    <string name="p2p_mesh_subtitle">Infrastructure-Free Wi-Fi Direct &amp; BLE</string>
+    <string name="clear_history">Clear History</string>
+    <string name="one_tap_sos_broadcast">1-TAP EMERGENCY S.O.S. BROADCAST</string>
+    <string name="broadcast_gps_sub">Broadcast GPS Location (%1$s, %2$s) + Distress to All Peers</string>
+    <string name="mesh_active">MESH ACTIVE (%1$d PEERS CONNECTED)</string>
+    <string name="scanning">SCANNING...</string>
+    <string name="scan_peers">SCAN PEERS</string>
+    <string name="my_node_id">MY NODE ID: %1$s</string>
+    <string name="no_peers_found">No mesh peers discovered nearby yet.</string>
+    <string name="scanning_nearby_desc">Scanning nearby Wi-Fi Direct &amp; BLE devices...</string>
+    <string name="encrypted_mesh_chat">ENCRYPTED MESH CHAT</string>
+    <string name="broadcast">BROADCAST</string>
+    <string name="type_encrypted_message">Type encrypted mesh message...</string>
+    <string name="send">SEND</string>
+    <string name="sos_broadcast_dialog_title">EMERGENCY S.O.S. BROADCAST</string>
+    <string name="distress_level">DISTRESS LEVEL</string>
+    <string name="additional_distress_note">ADDITIONAL DISTRESS NOTE (OPTIONAL)</string>
+    <string name="distress_note_placeholder">e.g. Injured leg, 2 survivors, low water...</string>
+    <string name="confirm_sos_broadcast">BROADCAST SOS NOW</string>
+    <string name="distress_level_critical">CRITICAL (Life Threatening)</string>
+    <string name="distress_level_severe">SEVERE (Medical Emergency)</string>
+    <string name="distress_level_moderate">MODERATE (Need Supplies/Assistance)</string>
+    <string name="distress_level_low">LOW (Status Advisory)</string>
+    <string name="mode_auto">AUTO MESH</string>
+    <string name="mode_ble">BLE ONLY</string>
+    <string name="mode_wifi">WIFI DIRECT</string>
+    <string name="distress_beacon">DISTRESS BEACON</string>
 </resources>

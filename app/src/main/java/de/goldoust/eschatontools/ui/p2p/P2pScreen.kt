@@ -25,10 +25,8 @@ import androidx.compose.material.icons.rounded.CellTower
 import androidx.compose.material.icons.rounded.DeleteSweep
 import androidx.compose.material.icons.rounded.FilterList
 import androidx.compose.material.icons.rounded.LocationOn
-import androidx.compose.material.icons.rounded.Navigation
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Radar
-import androidx.compose.material.icons.rounded.Radio
 import androidx.compose.material.icons.rounded.SignalCellularAlt
 import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material.icons.rounded.WifiTethering
@@ -58,12 +56,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import de.goldoust.eschatontools.R
 import de.goldoust.eschatontools.domain.p2p.DistressLevel
 import de.goldoust.eschatontools.domain.p2p.NetworkMode
 import de.goldoust.eschatontools.domain.p2p.P2pMessage
@@ -76,6 +76,26 @@ import de.goldoust.eschatontools.ui.theme.TacticalGreenSecondary
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+
+@Composable
+fun getNetworkModeTitle(mode: NetworkMode): String {
+    return when (mode) {
+        NetworkMode.HYBRID_BLE_WIFI -> stringResource(R.string.mode_auto)
+        NetworkMode.BLE_ONLY -> stringResource(R.string.mode_ble)
+        NetworkMode.WIFI_DIRECT_ONLY -> stringResource(R.string.mode_wifi)
+    }
+}
+
+@Composable
+fun getDistressLevelLabel(level: DistressLevel): String {
+    return when (level) {
+        DistressLevel.NONE -> ""
+        DistressLevel.CRITICAL_SOS -> stringResource(R.string.distress_level_critical)
+        DistressLevel.MEDICAL_EMERGENCY -> stringResource(R.string.distress_level_severe)
+        DistressLevel.SEARCH_RESCUE -> stringResource(R.string.distress_level_moderate)
+        DistressLevel.HAZARD_WARNING -> stringResource(R.string.distress_level_low)
+    }
+}
 
 @Composable
 fun P2pScreen(
@@ -128,13 +148,13 @@ fun P2pScreen(
                     )
                     Column {
                         Text(
-                            text = "P2P MESH & DIRECT CHAT",
+                            text = stringResource(R.string.p2p_mesh_title),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
-                            text = "Infrastructure-Free Wi-Fi Direct & BLE",
+                            text = stringResource(R.string.p2p_mesh_subtitle),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -144,7 +164,7 @@ fun P2pScreen(
                 IconButton(onClick = { viewModel.clearChatHistory() }) {
                     Icon(
                         imageVector = Icons.Rounded.DeleteSweep,
-                        contentDescription = "Clear History",
+                        contentDescription = stringResource(R.string.clear_history),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -174,13 +194,13 @@ fun P2pScreen(
                 )
                 Column {
                     Text(
-                        text = "1-TAP EMERGENCY S.O.S. BROADCAST",
+                        text = stringResource(R.string.one_tap_sos_broadcast),
                         fontWeight = FontWeight.Bold,
                         fontSize = 15.sp,
                         fontFamily = FontFamily.Monospace
                     )
                     Text(
-                        text = "Broadcast GPS Location (${"%.4f".format(state.currentLatitude)}, ${"%.4f".format(state.currentLongitude)}) + Distress to All Peers",
+                        text = stringResource(R.string.broadcast_gps_sub, "%.4f".format(state.currentLatitude), "%.4f".format(state.currentLongitude)),
                         fontSize = 11.sp,
                         color = Color.Black.copy(alpha = 0.85f)
                     )
@@ -216,7 +236,7 @@ fun P2pScreen(
                             modifier = Modifier.size(20.dp)
                         )
                         Text(
-                            text = "MESH ACTIVE (${state.connectedPeersCount} PEERS CONNECTED)",
+                            text = stringResource(R.string.mesh_active, state.connectedPeersCount),
                             style = MaterialTheme.typography.labelMedium,
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.Bold,
@@ -240,7 +260,7 @@ fun P2pScreen(
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = if (state.isSearchingPeers) "SCANNING..." else "SCAN PEERS",
+                            text = if (state.isSearchingPeers) stringResource(R.string.scanning) else stringResource(R.string.scan_peers),
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -256,7 +276,7 @@ fun P2pScreen(
                         FilterChip(
                             selected = state.networkMode == mode,
                             onClick = { viewModel.setNetworkMode(mode) },
-                            label = { Text(mode.title, fontSize = 10.sp, fontWeight = FontWeight.Bold) },
+                            label = { Text(getNetworkModeTitle(mode), fontSize = 10.sp, fontWeight = FontWeight.Bold) },
                             colors = FilterChipDefaults.filterChipColors(
                                 selectedContainerColor = TacticalAmberPrimary,
                                 selectedLabelColor = Color.Black
@@ -286,7 +306,7 @@ fun P2pScreen(
                     modifier = Modifier.size(18.dp)
                 )
                 Text(
-                    text = "DISCOVERED NEARBY NODES (${state.peerList.size})",
+                    text = "${stringResource(R.string.nav_p2p)} (${state.peerList.size})",
                     style = MaterialTheme.typography.labelMedium,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
@@ -333,7 +353,7 @@ fun P2pScreen(
                     modifier = Modifier.size(16.dp)
                 )
                 Text(
-                    text = "OFFLINE MESH CHAT STREAM",
+                    text = stringResource(R.string.encrypted_mesh_chat),
                     style = MaterialTheme.typography.labelSmall,
                     fontFamily = FontFamily.Monospace,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -343,7 +363,7 @@ fun P2pScreen(
             FilterChip(
                 selected = state.filterEmergencyOnly,
                 onClick = { viewModel.setFilterEmergencyOnly(!state.filterEmergencyOnly) },
-                label = { Text("EMERGENCY ONLY", fontSize = 10.sp, fontWeight = FontWeight.Bold) },
+                label = { Text(stringResource(R.string.distress_beacon), fontSize = 10.sp, fontWeight = FontWeight.Bold) },
                 colors = FilterChipDefaults.filterChipColors(
                     selectedContainerColor = EmergencyRedTertiary,
                     selectedLabelColor = Color.Black
@@ -409,7 +429,7 @@ fun P2pScreen(
                 modifier = Modifier.weight(1f),
                 placeholder = {
                     Text(
-                        text = "Broadcast mesh signal...",
+                        text = stringResource(R.string.type_encrypted_message),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 13.sp
                     )
@@ -440,7 +460,7 @@ fun P2pScreen(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Rounded.Send,
-                    contentDescription = "Send Message"
+                    contentDescription = stringResource(R.string.send)
                 )
             }
         }
@@ -650,14 +670,14 @@ fun SosBroadcastDialog(
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(
-                    text = "BROADCAST SOS NOW",
+                    text = stringResource(R.string.confirm_sos_broadcast),
                     fontWeight = FontWeight.Bold
                 )
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(text = "CANCEL", color = MaterialTheme.colorScheme.onSurface)
+                Text(text = stringResource(R.string.cancel), color = MaterialTheme.colorScheme.onSurface)
             }
         },
         icon = {
@@ -670,7 +690,7 @@ fun SosBroadcastDialog(
         },
         title = {
             Text(
-                text = "1-TAP S.O.S. BROADCAST",
+                text = stringResource(R.string.sos_broadcast_dialog_title),
                 style = MaterialTheme.typography.titleMedium,
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold
@@ -681,7 +701,7 @@ fun SosBroadcastDialog(
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Text(
-                    text = "Select distress protocol category and attach optional note. Your exact GPS coordinates and altitude will be attached automatically.",
+                    text = stringResource(R.string.distress_level),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -702,7 +722,7 @@ fun SosBroadcastDialog(
                             )
                         )
                         Text(
-                            text = level.label,
+                            text = getDistressLevelLabel(level),
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -714,8 +734,8 @@ fun SosBroadcastDialog(
                     value = state.sosNote,
                     onValueChange = onNoteChange,
                     modifier = Modifier.fillMaxWidth(),
-                    label = { Text("Distress Note (Optional)") },
-                    placeholder = { Text("e.g. Broken ankle near ridge") },
+                    label = { Text(stringResource(R.string.additional_distress_note)) },
+                    placeholder = { Text(stringResource(R.string.distress_note_placeholder)) },
                     singleLine = true
                 )
 
