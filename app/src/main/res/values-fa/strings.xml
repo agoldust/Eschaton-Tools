@@ -7,9 +7,12 @@
     <string name="nav_first_aid">کمک‌های اولیه</string>
     <string name="nav_p2p">شبکه مش</string>
 
-    <!-- Dashboard & New Modules -->
+    <!-- Dashboard & Categories -->
     <string name="dashboard_title">فرماندهی تاکتیکی</string>
     <string name="dashboard_subtitle">ماژول بقا را انتخاب کنید</string>
+    <string name="cat_nav_maps">مسیریابی و نقشه</string>
+    <string name="cat_emergency_signals">سیگنال‌ها و فرستنده‌های اضطراری</string>
+    <string name="cat_survival_mesh">بقا، پزشکی و شبکه مش</string>
     <string name="compass_desc">قطب‌نمای خورشیدی ۳ بعدی، نقاط GPS، تراز شیب‌سنج</string>
     <string name="beacon_desc">چراغ چشمک‌زن سخت‌افزاری، آژیر صوتی، ارسال کد مورس</string>
     <string name="first_aid_desc">راهنمای میدانی ۱۰۰٪ آفلاین، احیا و پروتکل‌های اضطراری</string>

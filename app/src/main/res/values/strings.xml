@@ -7,9 +7,12 @@
     <string name="nav_first_aid">First Aid</string>
     <string name="nav_p2p">P2P Mesh</string>
 
-    <!-- Dashboard & New Modules -->
+    <!-- Dashboard & Categories -->
     <string name="dashboard_title">TACTICAL COMMAND</string>
     <string name="dashboard_subtitle">SELECT SURVIVAL MODULE</string>
+    <string name="cat_nav_maps">NAVIGATION &amp; MAPS</string>
+    <string name="cat_emergency_signals">EMERGENCY &amp; SIGNALING</string>
+    <string name="cat_survival_mesh">SURVIVAL &amp; COMMUNICATIONS</string>
     <string name="compass_desc">3D Solar Compass, GPS Waypoints, Pitch &amp; Roll Level</string>
     <string name="beacon_desc">Hardware Strobe Light, Audio Siren, Morse Code Loop</string>
     <string name="first_aid_desc">100%% Offline Field Manual, CPR &amp; Emergency Protocols</string>
