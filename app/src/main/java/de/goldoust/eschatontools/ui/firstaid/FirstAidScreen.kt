@@ -1,7 +1,6 @@
 package de.goldoust.eschatontools.ui.firstaid
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -34,7 +33,6 @@ import androidx.compose.material.icons.rounded.BookmarkBorder
 import androidx.compose.material.icons.rounded.Build
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Emergency
-import androidx.compose.material.icons.rounded.Healing
 import androidx.compose.material.icons.rounded.Lightbulb
 import androidx.compose.material.icons.rounded.MedicalServices
 import androidx.compose.material.icons.rounded.Search
@@ -69,6 +67,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -239,7 +238,7 @@ fun ProtocolListPane(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-        // Big Icon Sub-Section Mode Selector Cards
+        // Big Icon Sub-Section Mode Selector Cards with Centered Text
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -273,6 +272,8 @@ fun ProtocolListPane(
                             fontSize = 9.sp,
                             fontWeight = FontWeight.Bold,
                             fontFamily = FontFamily.Monospace,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth(),
                             maxLines = 1
                         )
                     }
@@ -280,233 +281,240 @@ fun ProtocolListPane(
             }
         }
 
-        // Sub-Section 1: Quick Emergency Presets
-        AnimatedVisibility(visible = selectedTab == FirstAidTab.EMERGENCY_PRESETS) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(10.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                listOf(
-                    Pair("cpr_protocol", R.string.quick_cpr),
-                    Pair("tourniquet_protocol", R.string.quick_bleeding),
-                    Pair("water_purification", R.string.quick_water),
-                    Pair("hypothermia_protocol", R.string.quick_hypothermia)
-                ).forEach { (id, labelRes) ->
-                    Button(
-                        onClick = { onQuickEmergencyClick(id) },
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+        ) {
+            when (selectedTab) {
+                FirstAidTab.EMERGENCY_PRESETS -> {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(52.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = EmergencyRedTertiary,
-                            contentColor = Color.White
-                        ),
-                        shape = RoundedCornerShape(12.dp)
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
                     ) {
-                        Icon(
-                            imageVector = Icons.Rounded.Emergency,
-                            contentDescription = null,
-                            modifier = Modifier.size(22.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = stringResource(labelRes).uppercase(),
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp
-                        )
-                    }
-                }
-            }
-        }
-
-        // Sub-Section 2: All Guides & Search
-        AnimatedVisibility(visible = selectedTab == FirstAidTab.GUIDES_SEARCH) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(10.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                // Offline Search TextField
-                OutlinedTextField(
-                    value = uiState.searchQuery,
-                    onValueChange = onSearchQueryChange,
-                    modifier = Modifier.fillMaxWidth(),
-                    placeholder = {
-                        Text(
-                            text = stringResource(R.string.search_protocols_placeholder),
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            fontSize = 13.sp
-                        )
-                    },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Rounded.Search,
-                            contentDescription = "Search",
-                            tint = TacticalAmberPrimary
-                        )
-                    },
-                    trailingIcon = {
-                        if (uiState.searchQuery.isNotEmpty()) {
-                            IconButton(onClick = { onSearchQueryChange("") }) {
+                        listOf(
+                            Pair("cpr_protocol", R.string.quick_cpr),
+                            Pair("tourniquet_protocol", R.string.quick_bleeding),
+                            Pair("water_purification", R.string.quick_water),
+                            Pair("hypothermia_protocol", R.string.quick_hypothermia)
+                        ).forEach { (id, labelRes) ->
+                            Button(
+                                onClick = { onQuickEmergencyClick(id) },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(56.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = EmergencyRedTertiary,
+                                    contentColor = Color.White
+                                ),
+                                shape = RoundedCornerShape(12.dp)
+                            ) {
                                 Icon(
-                                    imageVector = Icons.Rounded.Clear,
-                                    contentDescription = "Clear",
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                    imageVector = Icons.Rounded.Emergency,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(22.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = stringResource(labelRes).uppercase(),
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp
                                 )
                             }
                         }
-                    },
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = TacticalAmberPrimary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
-                        focusedContainerColor = MaterialTheme.colorScheme.surface,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surface
-                    ),
-                    shape = RoundedCornerShape(10.dp),
-                    singleLine = true
-                )
+                    }
+                }
 
-                // Category Filter Chips Bar
-                LazyRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(ProtocolCategory.entries) { category ->
-                        val isSelected = uiState.selectedCategory == category
-                        FilterChip(
-                            selected = isSelected,
-                            onClick = { onCategorySelect(category) },
-                            label = {
+                FirstAidTab.GUIDES_SEARCH -> {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        // Offline Search TextField
+                        OutlinedTextField(
+                            value = uiState.searchQuery,
+                            onValueChange = onSearchQueryChange,
+                            modifier = Modifier.fillMaxWidth(),
+                            placeholder = {
                                 Text(
-                                    text = getCategoryLocalizedName(category),
-                                    fontSize = 11.sp,
-                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                                    text = stringResource(R.string.search_protocols_placeholder),
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    fontSize = 13.sp
                                 )
                             },
-                            colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = TacticalGreenSecondary,
-                                selectedLabelColor = Color.Black,
-                                containerColor = MaterialTheme.colorScheme.surface,
-                                labelColor = MaterialTheme.colorScheme.onSurface
-                            ),
-                            shape = RoundedCornerShape(8.dp)
-                        )
-                    }
-                }
-
-                // Protocol Items List
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(380.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    items(uiState.filteredProtocols) { protocol ->
-                        val isSelected = uiState.selectedProtocol?.id == protocol.id
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { onProtocolSelect(protocol) }
-                                .then(
-                                    if (isSelected) {
-                                        Modifier.border(
-                                            1.5.dp,
-                                            TacticalGreenSecondary,
-                                            RoundedCornerShape(12.dp)
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Rounded.Search,
+                                    contentDescription = "Search",
+                                    tint = TacticalAmberPrimary
+                                )
+                            },
+                            trailingIcon = {
+                                if (uiState.searchQuery.isNotEmpty()) {
+                                    IconButton(onClick = { onSearchQueryChange("") }) {
+                                        Icon(
+                                            imageVector = Icons.Rounded.Clear,
+                                            contentDescription = "Clear",
+                                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
-                                    } else Modifier
-                                ),
-                            colors = CardDefaults.cardColors(
-                                containerColor = if (isSelected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
-                            ),
-                            shape = RoundedCornerShape(12.dp)
-                        ) {
-                            Column(
-                                modifier = Modifier.padding(14.dp),
-                                verticalArrangement = Arrangement.spacedBy(6.dp)
-                            ) {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(
-                                        text = getCategoryLocalizedName(protocol.category).uppercase(),
-                                        style = MaterialTheme.typography.labelSmall,
-                                        fontFamily = FontFamily.Monospace,
-                                        fontWeight = FontWeight.Bold,
-                                        color = TacticalGreenSecondary
-                                    )
-
-                                    UrgencyBadge(urgency = protocol.urgency)
+                                    }
                                 }
+                            },
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = TacticalAmberPrimary,
+                                unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
+                                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                                unfocusedContainerColor = MaterialTheme.colorScheme.surface
+                            ),
+                            shape = RoundedCornerShape(10.dp),
+                            singleLine = true
+                        )
 
-                                Text(
-                                    text = protocol.title,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.onSurface
+                        // Category Filter Chips Bar
+                        LazyRow(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(ProtocolCategory.entries) { category ->
+                                val isSelected = uiState.selectedCategory == category
+                                FilterChip(
+                                    selected = isSelected,
+                                    onClick = { onCategorySelect(category) },
+                                    label = {
+                                        Text(
+                                            text = getCategoryLocalizedName(category),
+                                            fontSize = 11.sp,
+                                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                                        )
+                                    },
+                                    colors = FilterChipDefaults.filterChipColors(
+                                        selectedContainerColor = TacticalGreenSecondary,
+                                        selectedLabelColor = Color.Black,
+                                        containerColor = MaterialTheme.colorScheme.surface,
+                                        labelColor = MaterialTheme.colorScheme.onSurface
+                                    ),
+                                    shape = RoundedCornerShape(8.dp)
                                 )
+                            }
+                        }
 
-                                Text(
-                                    text = protocol.summary,
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    maxLines = 2
-                                )
+                        // Protocol Items List - Fills entire remaining vertical space!
+                        LazyColumn(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxWidth(),
+                            verticalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            items(uiState.filteredProtocols) { protocol ->
+                                val isSelected = uiState.selectedProtocol?.id == protocol.id
+                                Card(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable { onProtocolSelect(protocol) }
+                                        .then(
+                                            if (isSelected) {
+                                                Modifier.border(
+                                                    1.5.dp,
+                                                    TacticalGreenSecondary,
+                                                    RoundedCornerShape(12.dp)
+                                                )
+                                            } else Modifier
+                                        ),
+                                    colors = CardDefaults.cardColors(
+                                        containerColor = if (isSelected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
+                                    ),
+                                    shape = RoundedCornerShape(12.dp)
+                                ) {
+                                    Column(
+                                        modifier = Modifier.padding(14.dp),
+                                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                                    ) {
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.SpaceBetween,
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Text(
+                                                text = getCategoryLocalizedName(protocol.category).uppercase(),
+                                                style = MaterialTheme.typography.labelSmall,
+                                                fontFamily = FontFamily.Monospace,
+                                                fontWeight = FontWeight.Bold,
+                                                color = TacticalGreenSecondary
+                                            )
+
+                                            UrgencyBadge(urgency = protocol.urgency)
+                                        }
+
+                                        Text(
+                                            text = protocol.title,
+                                            style = MaterialTheme.typography.titleMedium,
+                                            fontWeight = FontWeight.Bold,
+                                            color = MaterialTheme.colorScheme.onSurface
+                                        )
+
+                                        Text(
+                                            text = protocol.summary,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            maxLines = 2
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
                 }
-            }
-        }
 
-        // Sub-Section 3: Bookmarks List
-        AnimatedVisibility(visible = selectedTab == FirstAidTab.BOOKMARKS) {
-            val bookmarkedList = uiState.allProtocols.filter { it.isBookmarked }
-            if (bookmarkedList.isEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(24.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = stringResource(R.string.bookmarked_protocols, 0),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    items(bookmarkedList) { protocol ->
-                        Card(
+                FirstAidTab.BOOKMARKS -> {
+                    val bookmarkedList = uiState.allProtocols.filter { it.isBookmarked }
+                    if (bookmarkedList.isEmpty()) {
+                        Box(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { onProtocolSelect(protocol) },
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.surface
-                            ),
-                            shape = RoundedCornerShape(12.dp)
+                                .fillMaxSize()
+                                .padding(24.dp),
+                            contentAlignment = Alignment.Center
                         ) {
-                            Column(
-                                modifier = Modifier.padding(14.dp),
-                                verticalArrangement = Arrangement.spacedBy(6.dp)
-                            ) {
-                                Text(
-                                    text = protocol.title,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                                Text(
-                                    text = protocol.summary,
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    maxLines = 2
-                                )
+                            Text(
+                                text = stringResource(R.string.bookmarked_protocols, 0),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    } else {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            items(bookmarkedList) { protocol ->
+                                Card(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable { onProtocolSelect(protocol) },
+                                    colors = CardDefaults.cardColors(
+                                        containerColor = MaterialTheme.colorScheme.surface
+                                    ),
+                                    shape = RoundedCornerShape(12.dp)
+                                ) {
+                                    Column(
+                                        modifier = Modifier.padding(14.dp),
+                                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                                    ) {
+                                        Text(
+                                            text = protocol.title,
+                                            style = MaterialTheme.typography.titleMedium,
+                                            fontWeight = FontWeight.Bold,
+                                            color = MaterialTheme.colorScheme.onSurface
+                                        )
+                                        Text(
+                                            text = protocol.summary,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            maxLines = 2
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
