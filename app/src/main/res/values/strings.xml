@@ -7,13 +7,23 @@
     <string name="nav_first_aid">First Aid</string>
     <string name="nav_p2p">P2P Mesh</string>
 
-    <!-- Dashboard -->
+    <!-- Dashboard & New Modules -->
     <string name="dashboard_title">TACTICAL COMMAND</string>
     <string name="dashboard_subtitle">SELECT SURVIVAL MODULE</string>
     <string name="compass_desc">3D Solar Compass, GPS Waypoints, Pitch &amp; Roll Level</string>
     <string name="beacon_desc">Hardware Strobe Light, Audio Siren, Morse Code Loop</string>
     <string name="first_aid_desc">100%% Offline Field Manual, CPR &amp; Emergency Protocols</string>
     <string name="p2p_desc">Infrastructure-Free Direct Mesh Chat &amp; 1-Tap SOS Broadcast</string>
+    <string name="nav_map">Tactical Radar Map</string>
+    <string name="map_desc">Game-style HUD Radar, Distance Rings, Waypoint &amp; P2P Overlays</string>
+    <string name="nav_typography">Signal Codes &amp; Ciphers</string>
+    <string name="typography_desc">NATO Phonetic Alphabet, Ground-to-Air Symbols, Field Ciphers</string>
+    <string name="nav_astrogation">Solar &amp; Star Astrogation</string>
+    <string name="astrogation_desc">Solar Panel Tilt Optimizer, Polaris Alignment, Moon &amp; Tides</string>
+    <string name="nav_budget">Ration &amp; Power Budget</string>
+    <string name="budget_desc">Water &amp; Food Days Remaining, Battery Runtime Estimator</string>
+    <string name="nav_ultrasonic">Ultrasonic &amp; Seismic Pulse</string>
+    <string name="ultrasonic_desc">15-22kHz Animal Emitter, Structural Tapping Metronome</string>
 
     <!-- Language Toggle -->
     <string name="lang_toggle_en">EN</string>

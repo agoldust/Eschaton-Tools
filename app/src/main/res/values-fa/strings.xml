@@ -7,13 +7,23 @@
     <string name="nav_first_aid">کمک‌های اولیه</string>
     <string name="nav_p2p">شبکه مش</string>
 
-    <!-- Dashboard -->
+    <!-- Dashboard & New Modules -->
     <string name="dashboard_title">فرماندهی تاکتیکی</string>
     <string name="dashboard_subtitle">ماژول بقا را انتخاب کنید</string>
     <string name="compass_desc">قطب‌نمای خورشیدی ۳ بعدی، نقاط GPS، تراز شیب‌سنج</string>
     <string name="beacon_desc">چراغ چشمک‌زن سخت‌افزاری، آژیر صوتی، ارسال کد مورس</string>
     <string name="first_aid_desc">راهنمای میدانی ۱۰۰٪ آفلاین، احیا و پروتکل‌های اضطراری</string>
     <string name="p2p_desc">شبکه مش آفلاین، چت مستقیم و پخش پیام SOS</string>
+    <string name="nav_map">نقشه رادار تاکتیکی</string>
+    <string name="map_desc">رادار تاکتیکی، حلقه‌های فاصله، رویه‌های نقاط و همتاها</string>
+    <string name="nav_typography">کدهای سیگنال و رمزنگاری</string>
+    <string name="typography_desc">الفبای فونتیک ناتو، نمادهای امداد هوایی، رمزنگاری میدانی</string>
+    <string name="nav_astrogation">ناوبری خورشیدی و نجومی</string>
+    <string name="astrogation_desc">زاویه‌یاب پنل خورشیدی، ستاره قطبی، فاز ماه و جزرومد</string>
+    <string name="nav_budget">محاسبه جیره‌بندی و انرژی</string>
+    <string name="budget_desc">روزهای بقای آب و غذا، تخمین دوام باتری</string>
+    <string name="nav_ultrasonic">امواج اولتراسونیک و پالس صوتی</string>
+    <string name="ultrasonic_desc">امواج فرکانس بالا (۱۵-۲۲کیلوهرتز)، پالس آکوستیک امداد</string>
 
     <!-- Language Toggle -->
     <string name="lang_toggle_en">EN</string>

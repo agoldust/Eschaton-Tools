@@ -62,15 +62,20 @@ import androidx.compose.ui.unit.sp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import de.goldoust.eschatontools.R
+import de.goldoust.eschatontools.ui.astrogation.SolarAstrogationScreen
 import de.goldoust.eschatontools.ui.beacon.BeaconScreen
+import de.goldoust.eschatontools.ui.budget.RationBudgetScreen
 import de.goldoust.eschatontools.ui.compass.CompassScreen
 import de.goldoust.eschatontools.ui.components.SurvivalPermissionBanner
 import de.goldoust.eschatontools.ui.components.getRequiredEschatonPermissions
 import de.goldoust.eschatontools.ui.firstaid.FirstAidScreen
+import de.goldoust.eschatontools.ui.map.TacticalMapScreen
 import de.goldoust.eschatontools.ui.p2p.P2pScreen
 import de.goldoust.eschatontools.ui.theme.EschatonToolsTheme
 import de.goldoust.eschatontools.ui.theme.TacticalAmberPrimary
 import de.goldoust.eschatontools.ui.theme.TacticalGreenSecondary
+import de.goldoust.eschatontools.ui.typography.TypographyScreen
+import de.goldoust.eschatontools.ui.ultrasonic.UltrasonicScreen
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
@@ -222,7 +227,7 @@ fun MainScreen() {
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                // High-performance screen content switching
+                // High-performance screen content switching across all 9 modules
                 Box(
                     modifier = Modifier
                         .weight(1f)
@@ -234,6 +239,11 @@ fun MainScreen() {
                         NavDestination.BEACON -> BeaconScreen()
                         NavDestination.FIRST_AID -> FirstAidScreen()
                         NavDestination.P2P_MESH -> P2pScreen()
+                        NavDestination.MAP -> TacticalMapScreen()
+                        NavDestination.TYPOGRAPHY -> TypographyScreen()
+                        NavDestination.ASTROGATION -> SolarAstrogationScreen()
+                        NavDestination.BUDGET -> RationBudgetScreen()
+                        NavDestination.ULTRASONIC -> UltrasonicScreen()
                     }
                 }
             }
@@ -282,7 +292,7 @@ fun DashboardContent(
             }
         }
 
-        // Section Cards Grid / Column
+        // Section Cards Grid / Column for all 9 modules
         NavDestination.entries.forEach { destination ->
             val title = stringResource(destination.titleRes)
             val desc = stringResource(destination.descRes)
