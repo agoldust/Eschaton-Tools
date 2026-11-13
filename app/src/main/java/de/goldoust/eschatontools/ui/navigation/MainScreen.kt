@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -85,9 +86,10 @@ fun MainScreen() {
     val systemLang = remember { Locale.getDefault().language }
     var currentLanguageTag by remember { mutableStateOf(if (systemLang == "fa") "fa" else "en") }
 
+    val currentConfig = LocalConfiguration.current
     val locale = remember(currentLanguageTag) { Locale.forLanguageTag(currentLanguageTag) }
-    val configuration = remember(locale) {
-        Configuration(context.resources.configuration).apply {
+    val configuration = remember(locale, currentConfig) {
+        Configuration(currentConfig).apply {
             setLocale(locale)
         }
     }
@@ -256,20 +258,26 @@ fun DashboardContent(
     onSelectDestination: (NavDestination) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val categories = remember {
+        listOf(
+            R.string.cat_nav_maps to listOf(NavDestination.COMPASS, NavDestination.MAP, NavDestination.ASTROGATION),
+            R.string.cat_emergency_signals to listOf(NavDestination.BEACON, NavDestination.ULTRASONIC, NavDestination.TYPOGRAPHY),
+            R.string.cat_survival_mesh to listOf(NavDestination.FIRST_AID, NavDestination.P2P_MESH, NavDestination.BUDGET)
+        )
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(18.dp)
     ) {
         // Hero Header Card
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface
-            ),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             shape = RoundedCornerShape(14.dp)
         ) {
             Column(
@@ -292,68 +300,112 @@ fun DashboardContent(
             }
         }
 
-        // Section Cards Grid / Column for all 9 modules
-        NavDestination.entries.forEach { destination ->
-            val title = stringResource(destination.titleRes)
-            val desc = stringResource(destination.descRes)
+        // Render 2-Column Grouped Categories
+        categories.forEach { (catTitleRes, modules) ->
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Text(
+                    text = stringResource(catTitleRes).uppercase(),
+                    style = MaterialTheme.typography.labelMedium,
+                    fontFamily = FontFamily.Monospace,
+                    fontWeight = FontWeight.Bold,
+                    color = TacticalGreenSecondary,
+                    letterSpacing = 1.sp
+                )
 
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onSelectDestination(destination) },
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                ),
-                shape = RoundedCornerShape(16.dp),
-                border = BorderStroke(1.dp, destination.accentColor.copy(alpha = 0.4f))
+                // Render in 2-Column Grid Pairs
+                val chunks = modules.chunked(2)
+                chunks.forEach { rowModules ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        rowModules.forEach { destination ->
+                            ModuleGridCard(
+                                destination = destination,
+                                onClick = { onSelectDestination(destination) },
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                        // Fill empty spot in odd rows
+                        if (rowModules.size == 1) {
+                            Spacer(modifier = Modifier.weight(1f))
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ModuleGridCard(
+    destination: NavDestination,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val title = stringResource(destination.titleRes)
+    val desc = stringResource(destination.descRes)
+
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(145.dp)
+            .clickable { onClick() },
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        shape = RoundedCornerShape(14.dp),
+        border = BorderStroke(1.dp, destination.accentColor.copy(alpha = 0.4f))
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(12.dp),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Top
             ) {
-                Row(
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(18.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        .size(44.dp)
+                        .background(destination.accentColor.copy(alpha = 0.15f), CircleShape)
+                        .border(1.5.dp, destination.accentColor, CircleShape),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .size(60.dp)
-                            .background(destination.accentColor.copy(alpha = 0.15f), CircleShape)
-                            .border(1.5.dp, destination.accentColor, CircleShape),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = destination.icon,
-                            contentDescription = title,
-                            tint = destination.accentColor,
-                            modifier = Modifier.size(32.dp)
-                        )
-                    }
-
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Text(
-                            text = title,
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Text(
-                            text = desc,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            maxLines = 2
-                        )
-                    }
-
                     Icon(
-                        imageVector = Icons.AutoMirrored.Rounded.ArrowForwardIos,
-                        contentDescription = null,
+                        imageVector = destination.icon,
+                        contentDescription = title,
                         tint = destination.accentColor,
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(24.dp)
                     )
                 }
+
+                Icon(
+                    imageVector = Icons.AutoMirrored.Rounded.ArrowForwardIos,
+                    contentDescription = null,
+                    tint = destination.accentColor.copy(alpha = 0.7f),
+                    modifier = Modifier.size(16.dp)
+                )
+            }
+
+            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1
+                )
+                Text(
+                    text = desc,
+                    style = MaterialTheme.typography.labelSmall,
+                    fontSize = 10.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 2
+                )
             }
         }
     }
