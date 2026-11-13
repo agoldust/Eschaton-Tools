@@ -2,14 +2,20 @@ package de.goldoust.eschatontools.ui.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Calculate
 import androidx.compose.material.icons.rounded.CellTower
 import androidx.compose.material.icons.rounded.Explore
+import androidx.compose.material.icons.rounded.FontDownload
+import androidx.compose.material.icons.rounded.GraphicEq
 import androidx.compose.material.icons.rounded.MedicalServices
+import androidx.compose.material.icons.rounded.Radar
 import androidx.compose.material.icons.rounded.Warning
+import androidx.compose.material.icons.rounded.WbSunny
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import de.goldoust.eschatontools.R
 import de.goldoust.eschatontools.ui.theme.EmergencyRedTertiary
+import de.goldoust.eschatontools.ui.theme.HazardYellow
 import de.goldoust.eschatontools.ui.theme.TacticalAmberPrimary
 import de.goldoust.eschatontools.ui.theme.TacticalGreenSecondary
 
@@ -42,5 +48,35 @@ enum class NavDestination(
         R.string.p2p_desc,
         Icons.Rounded.CellTower,
         TacticalAmberPrimary
+    ),
+    MAP(
+        R.string.nav_map,
+        R.string.map_desc,
+        Icons.Rounded.Radar,
+        TacticalGreenSecondary
+    ),
+    TYPOGRAPHY(
+        R.string.nav_typography,
+        R.string.typography_desc,
+        Icons.Rounded.FontDownload,
+        TacticalAmberPrimary
+    ),
+    ASTROGATION(
+        R.string.nav_astrogation,
+        R.string.astrogation_desc,
+        Icons.Rounded.WbSunny,
+        HazardYellow
+    ),
+    BUDGET(
+        R.string.nav_budget,
+        R.string.budget_desc,
+        Icons.Rounded.Calculate,
+        TacticalAmberPrimary
+    ),
+    ULTRASONIC(
+        R.string.nav_ultrasonic,
+        R.string.ultrasonic_desc,
+        Icons.Rounded.GraphicEq,
+        EmergencyRedTertiary
     )
 }
