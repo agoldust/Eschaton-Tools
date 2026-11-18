@@ -12,7 +12,6 @@
 ## 🌐 Languages / زبان‌ها
 
 - [🇬🇧 English Documentation](#-english-version)
-- [🇩🇪 Deutsche Dokumentation](#-deutsche-version)
 - [🇮🇷 مستندات فارسی](#-نسخه-فارسی)
 
 ---
